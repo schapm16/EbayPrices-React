@@ -8,16 +8,21 @@ const PORT = 3000
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 const ebayAPI = require('./ebayAPI');
+const transformAPIData = require('./transformAPIData');
+
 app.post('/sold-listings', async (req, res) => {
-  let listings = await ebayAPI.findCompletedItems(req);
-  res.send(listings);
+  let ebayAPIData = await ebayAPI.findCompletedItems(req);
+  let transformedData = transformAPIData(req, ebayAPIData);
+  res.json(transformedData);
 });
 
 app.post('/active-listings', async (req, res) => {
-  let listings = await ebayAPI.findItemsAdvanced(req);
-  res.send(listings);
+  let ebayAPIData = await ebayAPI.findItemsAdvanced(req);
+  let transformedData = transformAPIData(req, ebayAPIData);
+  res.json(transformedData);
 });
 
 

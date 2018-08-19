@@ -58,7 +58,7 @@ module.exports = {
     options = specifyPagination(options, req.body.page);
 
     return ebayEndpoint(options)
-      .then((response) => response)
+      .then((response) => JSON.parse(response))
       .catch((error) => console.log(error));
 
   },
@@ -78,7 +78,7 @@ module.exports = {
     options = specifyPagination(options, req.body.page);
 
     return ebayEndpoint(options)
-      .then((response) => response)
+      .then((response) => JSON.parse(response))
       .catch((error) => console.log(error))
 
   }
