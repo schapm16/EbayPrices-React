@@ -1,6 +1,7 @@
 function transformListings(listings) {
   let transformedListings = listings.map((listing) => {
     return {
+      itemId: listing.itemId[0],
       title: listing.title[0],
       galleryURL: listing.galleryURL[0],
       viewItemURL: listing.viewItemURL[0],
@@ -37,6 +38,7 @@ module.exports = (req, ebayAPIData) => {
   
   transformedData.listings = transformListings(accessedData.searchResult[0].item);
   transformedData.pagination = transformPagination(accessedData.paginationOutput[0]);
+  transformedData.timestamp = accessedData.timestamp[0];
 
   return transformedData;
 }
