@@ -22,14 +22,16 @@ function addItemFilters(options, filters) {
   options.qs = Object.assign(options.qs, {
     'itemFilter(0).name': 'Condition',
     'itemFilter(0).value(0)': '1000',
-    'itemFilter(0).value(1)': '1500'
+    'itemFilter(0).value(1)': '1500',
+    'itemFilter(1).name': 'HideDuplicateItems',
+    'itemFilter(1).value': 'true'
   });
 
   if (!filters) return options;
 
   filters.forEach((filter, index) => {
-    options.qs[`itemFilter(${index+1}).name`] = filter.name;
-    options.qs[`itemFilter(${index+1}).value`] = filter.value;
+    options.qs[`itemFilter(${index+2}).name`] = filter.name;
+    options.qs[`itemFilter(${index+2}).value`] = filter.value;
 
   });
   
