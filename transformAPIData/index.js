@@ -1,3 +1,5 @@
+const default_shippingCost = '10.50';
+
 function transformListings(listings) {
   let transformedListings = listings.map((listing) => {
     return {
@@ -5,7 +7,7 @@ function transformListings(listings) {
       title: listing.title[0],
       galleryURL: listing.galleryURL[0],
       viewItemURL: listing.viewItemURL[0],
-      shippingCost:(listing.shippingInfo[0].shippingServiceCost) ? parseFloat(listing.shippingInfo[0].shippingServiceCost[0].__value__).toFixed(2) : "",
+      shippingCost:(listing.shippingInfo[0].shippingServiceCost) ? parseFloat(listing.shippingInfo[0].shippingServiceCost[0].__value__).toFixed(2) : default_shippingCost,
       price:parseFloat(listing.sellingStatus[0].convertedCurrentPrice[0].__value__).toFixed(2),
       startTime: listing.listingInfo[0].startTime[0],
       endTime: listing.listingInfo[0].endTime[0],
