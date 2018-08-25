@@ -28,7 +28,7 @@ export default {
   },
 
   myStatsForListing: (myOverallStats, listing) => {
-    myOverallStats = utils.objToFloat(myOverallStats);
+    myOverallStats = utils.objToFloat(Object.assign({},myOverallStats));
 
     let myListingStats = {};
     
