@@ -1,7 +1,11 @@
 import utils from '../utils';
 
-let default_buyerShipping = 10.50,
-    default_stateTax = 0.075;
+const default_buyerShipping = 10.50,
+    default_stateTax = 0.075,
+    default_ebayShippingDiscount = 0.25,
+    default_ebayFee = 0.1,
+    default_paypalFeeRate = 0.029,
+    default_paypalFeeFixed = 0.3
 
 
 export default {
@@ -11,13 +15,14 @@ export default {
     let myCalc = {};
     
     my.buyerShipping = my.buyerShipping || default_buyerShipping;
-    my.tax = default_stateTax;
-    my.salePrice = (my.markedPrice - my.markedPrice * my.sale);
+    my.tax = my.stateTax || default_stateTax;
+    
+    my.price = ((1 - my.sale) * my.markedPrice) * (1 + my.tax);
+    my.shipping = my.buyerShipping * (1 - default_ebayShippingDiscount);
 
-    myCalc.listFor = ((my.profit - 0.011 * my.buyerShipping + (1 + my.tax) * my.salePrice + 0.3) / 0.871);
-    myCalc.roi = (my.profit / my.salePrice) * 100;
-    myCalc.costToBuyer = (myCalc.listFor + my.buyerShipping);
-
+    myCalc.costToBuyer = (my.profit + my.price + my.shipping + default_paypalFeeFixed) / (1 - default_ebayFee - default_paypalFeeRate);
+    myCalc.listFor = myCalc.costToBuyer - my.buyerShipping;
+    myCalc.roi = (my.profit / my.price) * 100;
 
     return utils.objToTwoDecimals(myCalc);
   },

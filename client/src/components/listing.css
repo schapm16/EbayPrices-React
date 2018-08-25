@@ -1,0 +1,28 @@
+.listing {
+  margin-bottom: 30px;
+  padding: 20px;
+  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
+}
+
+.listing p {
+  margin: 10px 0;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listing .my-neg {
+  color: green;
+}
+
+.listing .my-pos {
+  color: red;
+}
+
+.listing .panel1 {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}

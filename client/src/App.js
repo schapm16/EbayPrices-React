@@ -10,9 +10,10 @@ import { Listing } from './components';
 class App extends Component {
   myPricingData = {
     sale: 0.2,
-    markedPrice: 79.90,
+    markedPrice: 38.99,
     buyerShipping: 10.50,
-    profit: 15.00
+    profit: 15.00,
+    stateTax: 0.075
   };
 
   currentSearch = "";
@@ -25,7 +26,7 @@ class App extends Component {
   
   componentDidMount() { 
     api.post('/sold-listings', {
-      keywords: 'Nike Free',
+      keywords: 'Nike Cortez Ultra',
       gender: 'mens',
       page: this.page
     })
@@ -49,9 +50,9 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div id="container">
         {this.state.listings.map((listing) => {
-          return <Listing listing={listing}/>
+          return <Listing key={listing.itemId} listing={listing}/>
         })}
       </div>
     );
