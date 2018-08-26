@@ -5,7 +5,7 @@ import './App.css';
 import api from './api';
 import calc from './calcs';
 
-import { Listing } from './components'; 
+import { TopBar, ListingsContainer } from './components'; 
 
 class App extends Component {
   myPricingData = {
@@ -51,12 +51,12 @@ class App extends Component {
   render() {
     return (
       <div id="container">
-        {this.state.listings.map((listing) => {
-          return <Listing key={listing.itemId} listing={listing}/>
-        })}
+        <TopBar myOverallStats={this.state.myOverallStats}/>
+        <ListingsContainer id="listings" listings={this.state.listings}/>
       </div>
     );
   }
 }
 
 export default App;
+

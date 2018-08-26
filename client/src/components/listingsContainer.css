@@ -1,0 +1,9 @@
+#listingsContainer {
+  width: 100%;
+  height: 75vh;
+  overflow: scroll;
+}
+
+#listingsContainer::-webkit-scrollbar {
+  display: none;
+}

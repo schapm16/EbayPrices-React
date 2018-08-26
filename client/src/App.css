@@ -8,19 +8,36 @@ body {
 #container {
   max-width: 400px;
   margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center
 }
 
 .fw-li {
   font-weight: 300;
 }
 
-.fw-norm {
+.fw-nm {
   font-weight: 400;
 }
-.fw-med {
+.fw-md {
   font-weight: 500;
 }
 
+.fs-sm {
+  font-size: small;
+}
+
 .fs-lg {
-  font-size: larger;
+  font-size: large;
+}
+
+.fs-xlg {
+  font-size: x-large;
+}
+
+.text-center {
+  text-align: center;
 }
