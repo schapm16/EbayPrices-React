@@ -50,14 +50,14 @@ module.exports = {
         method: 'GET',
         qs: {
           'operation-name': 'findCompletedItems',
-          'categoryId': findCategoryId(req.body.gender),
-          'keywords': req.body.keywords,
+          'categoryId': findCategoryId(req.query.gender),
+          'keywords': req.query.keywords,
           'sortOrder': 'EndTimeSoonest'
       }
     };
 
     options = addItemFilters(options, [{name: 'SoldItemsOnly', value: 'true'}]);
-    options = specifyPagination(options, req.body.page);
+    options = specifyPagination(options, req.query.page);
 
     return ebayEndpoint(options)
       .then((response) => JSON.parse(response))
@@ -70,14 +70,14 @@ module.exports = {
         method: 'GET',
         qs: {
           'operation-name': 'findItemsAdvanced',
-          'categoryId': findCategoryId(req.body.gender),
-          'keywords': req.body.keywords,
+          'categoryId': findCategoryId(req.query.gender),
+          'keywords': req.query.keywords,
           'sortOrder': 'PricePlusShippingLowest'
       }
     }
 
     options = addItemFilters(options);
-    options = specifyPagination(options, req.body.page);
+    options = specifyPagination(options, req.query.page);
 
     return ebayEndpoint(options)
       .then((response) => JSON.parse(response))

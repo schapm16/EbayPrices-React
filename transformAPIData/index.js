@@ -29,7 +29,7 @@ function transformPagination(paginationOutput) {
   }
 }
 
-module.exports = (req, ebayAPIData) => {
+module.exports = (ebayAPIData) => {
   let accessedData;
   let transformedData = {}
   

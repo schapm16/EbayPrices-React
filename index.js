@@ -12,15 +12,15 @@ app.use(bodyParser.json());
 const ebayAPI = require('./ebayAPI');
 const transformAPIData = require('./transformAPIData');
 
-app.post('/sold-listings', async (req, res) => {
+app.get('/sold-listings', async (req, res) => {
   let ebayAPIData = await ebayAPI.findCompletedItems(req);
-  let transformedData = transformAPIData(req, ebayAPIData);
+  let transformedData = transformAPIData(ebayAPIData);
   res.json(transformedData);
 });
 
-app.post('/active-listings', async (req, res) => {
+app.get('/active-listings', async (req, res) => {
   let ebayAPIData = await ebayAPI.findItemsAdvanced(req);
-  let transformedData = transformAPIData(req, ebayAPIData);
+  let transformedData = transformAPIData(ebayAPIData);
   res.json(transformedData);
 });
 
