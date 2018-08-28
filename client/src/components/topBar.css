@@ -1,21 +1,14 @@
 .topBar {
-  height: 25vh;
+  height: 15vh;
   width: 100%;
   z-index: 1;
+  
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   box-shadow: 0 0 5px #eee;
 }
 
 .topBar p {
   margin: 10px;
-}
-
-.topBar .panel1 {
-  border-bottom: 1px solid #eee;
-}
-
-.topBar .panel2 {
-  display: flex;
 }

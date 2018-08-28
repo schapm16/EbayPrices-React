@@ -1,0 +1,15 @@
+.modal-content {
+  box-sizing: border-box;
+
+  position: fixed;
+  top: 7vh;
+  height: 93vh;
+  width: 400px;
+  z-index: 10;
+  
+  background: #fff;
+  opacity: 1;
+
+  padding: 10px;
+
+}

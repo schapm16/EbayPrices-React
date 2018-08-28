@@ -2,57 +2,50 @@ import React, { Component } from 'react';
 
 import './App.css';
 
-import api from './api';
 import calc from './calcs';
 
-import { TopBar, ListingsContainer } from './components'; 
+import { SearchBar, TopBar, ListingsContainer, Modal, SearchForm } from './components'; 
 
 class App extends Component {
-  myPricingData = {
-    sale: 0.2,
-    markedPrice: 38.99,
-    buyerShipping: 10.50,
-    profit: 15.00,
-    stateTax: 0.075
-  };
-
-  currentSearch = "";
-  page = 1;
+  currentSearchKeywords = ""
 
   state = {
     listings: [],
-    myOverallStats: {}
-  };
+    myOverallStats: {},
+    displayModal: false
+  }
   
-  componentDidMount() { 
-    api.post('/sold-listings', {
-      keywords: 'Nike Cortez Ultra',
-      gender: 'mens',
-      page: this.page
+  searchBar_Click = () => {
+    this.setState({displayModal: true});
+  }
+
+  handleData = (myPricingData, listingData, keywords) => {
+    let myOverallStats = calc.myOverallStats(myPricingData);
+    let listings = (listingData) ? listingData.listings : this.state.listings;
+
+    listings.forEach((listing) => {
+      listing.myListingStats = calc.myStatsForListing(myOverallStats, listing);
     })
-    .then(response => {
 
-      let myOverallStats = calc.myOverallStats(this.myPricingData)
+    if (keywords) this.currentSearchKeywords = keywords;
 
-      response.listings.forEach((listing) => {
-        listing.myListingStats = calc.myStatsForListing(myOverallStats, listing);
-      })
-
-      this.setState({
-        listings: response.listings,
-        myOverallStats
-      });
-
-      this.page = response.pagination.pageNumber;
-    })
-    .catch(error => console.log(error));
+    this.setState({
+      listings,
+      myOverallStats,
+      displayModal: false
+    });
   }
 
   render() {
     return (
       <div id="container">
+        <SearchBar onClick={this.searchBar_Click}/>
         <TopBar myOverallStats={this.state.myOverallStats}/>
         <ListingsContainer id="listings" listings={this.state.listings}/>
+        <Modal active={this.state.displayModal}>
+          <SearchForm handleData={this.handleData} currentSearchKeywords={this.currentSearchKeywords}/>
+        </Modal>
+        
       </div>
     );
   }

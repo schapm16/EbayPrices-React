@@ -7,7 +7,7 @@ const configuredRequest = request.defaults({
 
 
 export default {
-  post: (path, body) => {
-    return configuredRequest.post(path, {body})
+  get: (path, query) => {
+    return configuredRequest.get(path, {qs: query})
   }
 }

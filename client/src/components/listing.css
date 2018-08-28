@@ -13,14 +13,6 @@
   text-overflow: ellipsis;
 }
 
-.listing .my-neg {
-  color: green;
-}
-
-.listing .my-pos {
-  color: red;
-}
-
 .listing .panel1 {
   display: flex;
   justify-content: space-around;
