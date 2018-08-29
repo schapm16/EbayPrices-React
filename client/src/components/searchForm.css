@@ -1,21 +1,61 @@
-.searchForm input[type='text'],
-.searchForm input[type='number'] {
-  display: block;
-  box-sizing: border-box;
-  background: #FFF;
-  height: 30px;
-  border: 1px solid #000;
-  border-radius: 2px;
-  padding: 5px;
+.searchContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.searchForm button {
+.searchHeader {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.searchHeader button {
+  box-sizing: border-box;
+  background: #FFF;
+  color: #000;
+  height: 40px;
+  width: 60px;
+  
+  border: 2px solid #000;
+  border-radius: 2px;
+
+  outline: none;
+}
+
+.searchInputFields {
+  width: 100%;
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.searchInputFields input[type='text'],
+.searchInputFields input[type='number'] {
   display: block;
   box-sizing: border-box;
-  background: #000;
-  color: #FFF;
-  height: 30px;
+  height: 50px;
+  width: 100%;
   
-  border: 1px solid #000;
+  background: #FFF;
+  border: 2px solid #000;
   border-radius: 2px;
+  padding: 5px;
+  margin-bottom: 10px;
+
+  font-size: x-large;
+  text-align: center;
+}
+
+.searchInputFields input:focus,
+.searchInputFields input:focus {
+  outline: none;
+}
+
+.searchInputFields input[name='keywords'] {
+  width: 100%;
 }
