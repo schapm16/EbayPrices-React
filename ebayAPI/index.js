@@ -10,12 +10,13 @@ const ebayEndpoint = request.defaults({
 });
 
 function findCategoryId(gender) {
-  if (gender.match(/mens/gi)) {
-    return '15709'
-  }
-  else if (gender.match(/womens/gi)) {
+  if (gender.match(/womens/gi)) {
     return '95672'
   }
+  else if (gender.match(/mens/gi)) {
+    return '15709'
+  }
+  
 }
 
 function addItemFilters(options, filters) {
@@ -50,7 +51,7 @@ module.exports = {
         method: 'GET',
         qs: {
           'operation-name': 'findCompletedItems',
-          'categoryId': findCategoryId(req.query.gender),
+          'categoryId': findCategoryId(req.query.apiCategory),
           'keywords': req.query.keywords,
           'sortOrder': 'EndTimeSoonest'
       }
@@ -70,7 +71,7 @@ module.exports = {
         method: 'GET',
         qs: {
           'operation-name': 'findItemsAdvanced',
-          'categoryId': findCategoryId(req.query.gender),
+          'categoryId': findCategoryId(req.query.apiCategory),
           'keywords': req.query.keywords,
           'sortOrder': 'PricePlusShippingLowest'
       }
