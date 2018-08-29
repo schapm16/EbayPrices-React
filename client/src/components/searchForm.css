@@ -1,0 +1,21 @@
+.searchForm input[type='text'],
+.searchForm input[type='number'] {
+  display: block;
+  box-sizing: border-box;
+  background: #FFF;
+  height: 30px;
+  border: 1px solid #000;
+  border-radius: 2px;
+  padding: 5px;
+}
+
+.searchForm button {
+  display: block;
+  box-sizing: border-box;
+  background: #000;
+  color: #FFF;
+  height: 30px;
+  
+  border: 1px solid #000;
+  border-radius: 2px;
+}

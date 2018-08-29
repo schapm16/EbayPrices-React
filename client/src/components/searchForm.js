@@ -2,50 +2,57 @@ import React, { Component } from 'react';
 
 import api from '../api';
 
+import './searchForm.css';
+
 class SearchForm extends Component {
-  myPricingData = {
-    sale: 0.2,
-    markedPrice: 38.99,
-    buyerShipping: 10.50,
-    profit: 15.00,
-    stateTax: 0.075
-  }
 
   state = {
     apiMode: '/sold-listings',
     form: {}
   }
 
-  onChange = (event) => {
-    let form = {};
-    form[event.target.name] = event.target.value;
-    
-    this.setState({form});
+  shouldRequestData = () => {
+    return this.props.currentSearchKeywords !== this.state.form.keywords;
   }
 
-  onSearch = () => {
-    if (this.props.currentSearchKeywords !== this.state.form.keywords) {
+  onChange = (event) => {
+    let { target } = event;
+    this.setState(({ form }) => {
+      form[target.name] = target.value;
+      return { form };
+    });
+  }
+
+  onDone = (event) => {
+    event.preventDefault();
+    let { keywords, ...myPricingData } = this.state.form;
+  
+    if (this.shouldRequestData()) {
       api.get(this.state.apiMode, {
-        keywords: this.state.form.keywords,
+        keywords,
         gender: 'mens',
         page: '1'
       })
       .then(listingData => {
-        this.props.handleData(this.myPricingData, listingData, this.state.form.keywords);
+        this.props.handleData(myPricingData, listingData, this.state.form.keywords);
       })
       .catch(error => console.log(error));
     }
     else {
-      this.props.handleData(this.myPricingData, null, null);
+      this.props.handleData(myPricingData, null, null);
     }
   } 
 
 
   render() {
     return (
-      <div onChange={(event) => this.onChange(event)}>
-        <input type="text" name="keywords" />
-        <button onClick={this.onSearch}>Search</button>
+      <div className="searchForm" onChange={(event) => this.onChange(event)}>
+        <input type="text" name="keywords" placeholder="Search"/>
+        <input type="number" name="markedPrice" placeholder="markedPrice"/>
+        <input type="number" name="profit" placeholder="profit"/>
+        <input type="number" name="sale" defaultValue="20" />
+        <input type="number" name="buyerShipping" defaultValue="10.50" />
+        <input type="submit" onClick={this.onDone} value="Done"/>
       </div>
     );
   }
