@@ -4,6 +4,7 @@ import Listing from './listing';
 import ListingsContainer from './listingsContainer';
 import Modal from './modal';
 import SearchForm from './searchForm';
+import ApiCategory from './apiCategory';
 
 
 export {
@@ -12,5 +13,6 @@ export {
   Listing,
   ListingsContainer,
   Modal,
-  SearchForm
+  SearchForm,
+  ApiCategory
 }
