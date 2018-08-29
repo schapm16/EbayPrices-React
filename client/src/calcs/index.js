@@ -5,7 +5,8 @@ const default_buyerShipping = 10.50,
     default_ebayShippingDiscount = 0.25,
     default_ebayFee = 0.1,
     default_paypalFeeRate = 0.029,
-    default_paypalFeeFixed = 0.3
+    default_paypalFeeFixed = 0.3,
+    default_sale = 20
 
 
 export default {
@@ -16,8 +17,9 @@ export default {
     
     my.buyerShipping = my.buyerShipping || default_buyerShipping;
     my.tax = my.stateTax || default_stateTax;
+    my.sale = my.sale || default_sale;
     
-    my.price = ((1 - my.sale) * my.markedPrice) * (1 + my.tax);
+    my.price = ((100 - my.sale) / 100 * my.markedPrice) * (1 + my.tax);
     my.shipping = my.buyerShipping * (1 - default_ebayShippingDiscount);
 
     myCalc.costToBuyer = (my.profit + my.price + my.shipping + default_paypalFeeFixed) / (1 - default_ebayFee - default_paypalFeeRate);
