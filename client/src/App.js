@@ -7,8 +7,11 @@ import calc from './calcs';
 import { SearchBar, TopBar, ListingsContainer, Modal, SearchForm } from './components'; 
 
 class App extends Component {
-  currentSearchKeywords = ""
-
+  currentApiParameters = {
+    searchKeywords: "",
+    apiCategory: "" 
+  }
+  
   state = {
     listings: [],
     myOverallStats: {},
@@ -19,7 +22,7 @@ class App extends Component {
     this.setState({displayModal: true});
   }
 
-  handleData = (myPricingData, listingData, keywords) => {
+  handleData = (myPricingData, listingData, { keywords, apiCategory }) => {
     let myOverallStats = calc.myOverallStats(myPricingData);
     let listings = (listingData) ? listingData.listings : this.state.listings;
 
@@ -27,7 +30,8 @@ class App extends Component {
       listing.myListingStats = calc.myStatsForListing(myOverallStats, listing);
     })
 
-    if (keywords) this.currentSearchKeywords = keywords;
+    if (keywords) this.currentApiParameters.keywords = keywords;
+    if (apiCategory) this.currentApiParameters.apiCategory = apiCategory;
 
     this.setState({
       listings,
@@ -43,7 +47,7 @@ class App extends Component {
         <TopBar myOverallStats={this.state.myOverallStats}/>
         <ListingsContainer id="listings" listings={this.state.listings}/>
         <Modal active={this.state.displayModal}>
-          <SearchForm handleData={this.handleData} currentSearchKeywords={this.currentSearchKeywords}/>
+          <SearchForm handleData={this.handleData} currentApiParameters={this.currentApiParameters}/>
         </Modal>
         
       </div>
