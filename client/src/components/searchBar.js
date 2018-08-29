@@ -5,8 +5,8 @@ import './searchBar.css';
 const SearchBar = ({ onClick }) => {
   return(
     <div className="searchBar">
-      <i className="material-icons search-icon" onClick={onClick}>search</i>
-      <i className="fs-xlg fw-md">Ebay PriceFinder</i>
+      <span className="material-icons search-icon" onClick={onClick}>search</span>
+      <span className="fs-xlg fw-md">Ebay PriceFinder</span>
     </div>
 
   );
