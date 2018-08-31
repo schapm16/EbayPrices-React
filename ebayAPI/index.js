@@ -1,4 +1,8 @@
 const request = require('request-promise-native');
+const devUtils = require('./devUtils');
+
+devUtils.logRequests(request);
+
 
 const ebayEndpoint = request.defaults({
   url: 'http://svcs.ebay.com/services/search/FindingService/v1',
