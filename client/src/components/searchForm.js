@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import { Link } from 'react-router-dom';
 import { ApiCategory } from './';
 
 import api from '../api';
@@ -20,7 +21,7 @@ class SearchForm extends Component {
   }
 
   shouldRequestData = () => {
-    return this.props.currentApiParameters.keywords !== this.state.form.keywords &&
+    return this.props.currentApiParameters.keywords !== this.state.form.keywords ||
            this.props.currentApiParameters.apiCategory !== this.state.apiCategory;
   }
 
@@ -32,7 +33,7 @@ class SearchForm extends Component {
     });
   }
 
-  onDone = (event) => {
+  getData = (event) => {
     let { keywords, ...myPricingData } = this.state.form;
   
     if (this.shouldRequestData()) {
@@ -56,11 +57,11 @@ class SearchForm extends Component {
     return (
       <div className="searchContainer">
         <div className="searchHeader">
-          <span className="material-icons">arrow_back_ios</span>
-          <button type="button" onClick={this.onDone}>Done</button>
+          <Link to="/listings" className="material-icons back-icon">arrow_back_ios</Link>
+          <Link to="listings"><button type="button" onClick={this.props.onDone}>Done</button></Link>
         </div>
 
-        <form className="searchInputFields" onChange={this.onChange}>
+        <form className="searchInputFields" onChange={this.onChange} onBlur={this.getData}>
           <div className="group1">
             <input type="text" name="keywords" placeholder="Search" value={this.state.form.keywords}/>
             <ApiCategory apiCategory={this.state.apiCategory} changeApiCategory={this.changeApiCategory}/>

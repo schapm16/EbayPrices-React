@@ -1,11 +1,13 @@
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+
 import './searchBar.css';
 
-const SearchBar = ({ onClick }) => {
+const SearchBar = () => {
   return(
     <div className="searchBar">
-      <span className="material-icons search-icon" onClick={onClick}>search</span>
+      <Link to="/search" className="material-icons search-icon">search</Link>
       <span className="fs-xlg fw-md">Ebay PriceFinder</span>
     </div>
 

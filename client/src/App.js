@@ -4,24 +4,25 @@ import './App.css';
 
 import calc from './calcs';
 
-import { SearchBar, TopBar, ListingsContainer, Modal, SearchForm } from './components'; 
+import { Route } from 'react-router-dom';
+import { SearchBar, TopBar, ListingsContainer, SearchForm } from './components'; 
 
 class App extends Component {
   currentApiParameters = {
     searchKeywords: "",
     apiCategory: "" 
   }
+
+  futureState = {
+    listings: [],
+    myOverallStats: {}
+  }
   
   state = {
     listings: [],
-    myOverallStats: {},
-    displayModal: false
+    myOverallStats: {}
   }
   
-  searchBar_Click = () => {
-    this.setState({displayModal: true});
-  }
-
   handleData = (myPricingData, listingData, { keywords, apiCategory }) => {
     let myOverallStats = calc.myOverallStats(myPricingData);
     let listings = (listingData) ? listingData.listings : this.state.listings;
@@ -33,23 +34,33 @@ class App extends Component {
     if (keywords) this.currentApiParameters.keywords = keywords;
     if (apiCategory) this.currentApiParameters.apiCategory = apiCategory;
 
-    this.setState({
+    this.futureState = {
       listings,
-      myOverallStats,
-      displayModal: false
-    });
+      myOverallStats
+    };
+  }
+
+  onDone = () => {
+    this.setState(this.futureState);
   }
 
   render() {
     return (
       <div id="container">
-        <SearchBar onClick={this.searchBar_Click}/>
-        <TopBar myOverallStats={this.state.myOverallStats}/>
-        <ListingsContainer id="listings" listings={this.state.listings}/>
-        <Modal active={this.state.displayModal}>
-          <SearchForm handleData={this.handleData} currentApiParameters={this.currentApiParameters}/>
-        </Modal>
+        <SearchBar/>
+
+        <Route exact path="/listings" render={() => (
+          <TopBar myOverallStats={this.state.myOverallStats}/>
+        )} />
+
+        <Route exact path="/listings" render={() => (
+          <ListingsContainer id="listings" listings={this.state.listings}/>
+        )} />
         
+        <Route exact path="/search" render={() => (        
+          <SearchForm handleData={this.handleData} currentApiParameters={this.currentApiParameters} onDone={this.onDone}/>
+        )} />
+
       </div>
     );
   }
