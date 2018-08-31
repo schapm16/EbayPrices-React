@@ -7,5 +7,11 @@ exports.logRequests = function(request) {
       delete data.uri.href;
       console.log(data);
     }
+
+    if (type === 'response') {
+      delete data.body;
+      console.log(data);
+    }
   });
 }
+
