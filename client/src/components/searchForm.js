@@ -9,6 +9,8 @@ import './searchForm.css';
 
 class SearchForm extends Component {
 
+  lastApiParameters = this.props.lastApiParameters;
+
   state = {
     apiMode: '/sold-listings',
     apiCategory: 'mens',
@@ -21,8 +23,8 @@ class SearchForm extends Component {
   }
 
   shouldRequestData = () => {
-    return this.props.currentApiParameters.keywords !== this.state.form.keywords ||
-           this.props.currentApiParameters.apiCategory !== this.state.apiCategory;
+    return (this.state.form.keywords !== this.lastApiParameters.keywords) ||
+           (this.state.apiCategory !== this.lastApiParameters.apiCategory);
   }
 
   onChange = (event) => {
@@ -33,17 +35,19 @@ class SearchForm extends Component {
     });
   }
 
-  getData = (event) => {
-    let { keywords, ...myPricingData } = this.state.form;
+  getData = () => {
+    let { apiMode, apiCategory, form } = this.state; 
+    let { keywords, ...myPricingData } = form;
   
     if (this.shouldRequestData()) {
-      api.get(this.state.apiMode, {
+      api.get(apiMode, {
         keywords,
-        apiCategory: this.state.apiCategory,
+        apiCategory: apiCategory,
         page: '1'
       })
       .then(listingData => {
-        this.props.handleData(myPricingData, listingData, this.state.form.keywords);
+        this.lastApiParameters = { keywords, apiCategory }
+        this.props.handleData(myPricingData, listingData);
       })
       .catch(error => console.log(error));
     }
@@ -58,7 +62,9 @@ class SearchForm extends Component {
       <div className="searchContainer">
         <div className="searchHeader">
           <Link to="/listings" className="material-icons back-icon">arrow_back_ios</Link>
-          <Link to="listings"><button type="button" onClick={this.props.onDone}>Done</button></Link>
+          <Link to="listings">
+            <button type="button" onClick={() => this.props.onDone(this.lastApiParameters)}>Done</button>
+          </Link>
         </div>
 
         <form className="searchInputFields" onChange={this.onChange} onBlur={this.getData}>

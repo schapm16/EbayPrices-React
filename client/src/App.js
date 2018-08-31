@@ -8,7 +8,7 @@ import { Route } from 'react-router-dom';
 import { SearchBar, TopBar, ListingsContainer, SearchForm } from './components'; 
 
 class App extends Component {
-  currentApiParameters = {
+  lastApiParameters = {
     searchKeywords: "",
     apiCategory: "" 
   }
@@ -23,16 +23,13 @@ class App extends Component {
     myOverallStats: {}
   }
   
-  handleData = (myPricingData, listingData, { keywords, apiCategory }) => {
+  handleData = (myPricingData, listingData) => {
     let myOverallStats = calc.myOverallStats(myPricingData);
-    let listings = (listingData) ? listingData.listings : this.state.listings;
+    let listings = (listingData) ? listingData.listings : this.futureState.listings;
 
     listings.forEach((listing) => {
       listing.myListingStats = calc.myStatsForListing(myOverallStats, listing);
     })
-
-    if (keywords) this.currentApiParameters.keywords = keywords;
-    if (apiCategory) this.currentApiParameters.apiCategory = apiCategory;
 
     this.futureState = {
       listings,
@@ -40,7 +37,9 @@ class App extends Component {
     };
   }
 
-  onDone = () => {
+  onDone = ({keywords, apiCategory}) => {
+    if (keywords) this.lastApiParameters.keywords = keywords;
+    if (apiCategory) this.lastApiParameters.apiCategory = apiCategory;
     this.setState(this.futureState);
   }
 
@@ -58,7 +57,7 @@ class App extends Component {
         )} />
         
         <Route exact path="/search" render={() => (        
-          <SearchForm handleData={this.handleData} currentApiParameters={this.currentApiParameters} onDone={this.onDone}/>
+          <SearchForm handleData={this.handleData} lastApiParameters={this.lastApiParameters} onDone={this.onDone}/>
         )} />
 
       </div>
