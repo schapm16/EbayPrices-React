@@ -3,14 +3,15 @@ import React, { Component } from 'react';
 import './App.css';
 
 import calc from './calcs';
+import api from './api';
 
 import { Route } from 'react-router-dom';
 import { SearchBar, TopBar, ListingsContainer, SearchForm } from './components'; 
 
 class App extends Component {
   lastApiParameters = {
-    searchKeywords: "",
-    apiCategory: "" 
+    keywords: '',
+    apiCategory: '' 
   }
 
   futureState = {
@@ -20,7 +21,41 @@ class App extends Component {
   
   state = {
     listings: [],
-    myOverallStats: {}
+    myOverallStats: {},
+    searchParameters: {
+      apiMode: 'sold-listings',
+      apiCategory: 'mens',
+      page: '1'
+    }
+  }
+
+  updateData = (passedSearchParameters, shouldRequestData) => {
+    let currentSearchParameters = this.state.searchParameters;
+
+    if (passedSearchParameters) {
+      for (let prop in passedSearchParameters) {
+        currentSearchParameters[prop] = passedSearchParameters[prop];
+      }
+    }
+
+    let { keywords, apiMode, apiCategory, page, ...myPricingData } = currentSearchParameters;
+
+    if (shouldRequestData) {
+      api.get(apiMode, {
+          keywords,
+          apiCategory: apiCategory,
+          page: '1'
+        })
+        .then(listingData => {
+          this.lastApiParameters = { keywords, apiCategory };
+          this.futureState.listings = listingData;
+          this.handleData(myPricingData, listingData);
+        })
+        .catch(error => console.log(error));
+    } else {
+      this.lastApiParameters = { keywords, apiCategory }
+      this.handleData(myPricingData, null);
+    }
   }
   
   handleData = (myPricingData, listingData) => {
@@ -37,10 +72,16 @@ class App extends Component {
     };
   }
 
-  onDone = ({keywords, apiCategory}) => {
-    if (keywords) this.lastApiParameters.keywords = keywords;
-    if (apiCategory) this.lastApiParameters.apiCategory = apiCategory;
-    this.setState(this.futureState);
+  onDone = (passedSearchParameters) => {
+    this.setState(({searchParameters, listings, myOverallStats}) => {
+      for (let prop in passedSearchParameters) {
+        searchParameters[prop] = passedSearchParameters[prop];
+      }
+      
+      listings = this.futureState.listings;
+      myOverallStats = this.futureState.myOverallStats;
+      return { searchParameters, listings, myOverallStats };
+    });
   }
 
   render() {
@@ -57,7 +98,7 @@ class App extends Component {
         )} />
         
         <Route exact path="/search" render={() => (        
-          <SearchForm handleData={this.handleData} lastApiParameters={this.lastApiParameters} onDone={this.onDone}/>
+          <SearchForm lastApiParameters={this.lastApiParameters} updateData={this.updateData} onDone={this.onDone}/>
         )} />
 
       </div>
