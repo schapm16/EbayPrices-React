@@ -4,15 +4,20 @@ const default_shippingCost = '10.50';
 
 function transformListings(listings) {
   let transformedListings = listings.map((listing) => {
+    let startTime = moment(listing.listingInfo[0].startTime[0]);
+    let endTime = moment(listing.listingInfo[0].endTime[0]);
+    let durationTime = moment.duration(endTime.diff(startTime));
+
     return {
       itemId: listing.itemId[0],
       title: listing.title[0],
       galleryURL: listing.galleryURL[0],
       viewItemURL: listing.viewItemURL[0],
       shippingCost:(listing.shippingInfo[0].shippingServiceCost) ? parseFloat(listing.shippingInfo[0].shippingServiceCost[0].__value__).toFixed(2) : default_shippingCost,
-      price:parseFloat(listing.sellingStatus[0].convertedCurrentPrice[0].__value__).toFixed(2),
-      startTime: moment(listing.listingInfo[0].startTime[0]).format('MM/DD/YYYY HH:mm'),
-      endTime: moment(listing.listingInfo[0].endTime[0]).format('MM/DD/YYYY HH:mm'),
+      price: parseFloat(listing.sellingStatus[0].convertedCurrentPrice[0].__value__).toFixed(2),
+      startTime: startTime.format('MM/DD/YYYY HH:mm'),
+      endTime: endTime.format('MM/DD/YYYY HH:mm'),
+      durationTime: Math.round(durationTime.asDays()).toString(),
       condition: listing.condition[0].conditionDisplayName[0],
       isMultiVariationListing: listing.isMultiVariationListing[0]
     }
