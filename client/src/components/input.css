@@ -20,6 +20,10 @@
   justify-content: flex-start;
 }
 
+.input-field .input-box.justify-center {
+  justify-content: center;
+}
+
 .input-field .input-box .symbol {
   width: 10%;
 }
