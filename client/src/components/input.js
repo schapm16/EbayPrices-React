@@ -8,10 +8,11 @@ const Input = ({ type, name, text, unit, value }) => {
 
   if (unit === '$') justify = 'justify-left'
   else if (unit === '%') justify = 'justify-right'
+  else justify='justify-center';
 
   return (
     <div className = "input-field">
-      <label className={`input-box ${justify}`} for={name}>
+      <label className={`input-box ${justify}`} htmlFor={name}>
         {(unit === '$') ? <span className="symbol">$</span> : null}
         <input type={type} id={name} name={name} value= {value}/>
         {(unit === '%') ? <span className="symbol">%</span> : null}
