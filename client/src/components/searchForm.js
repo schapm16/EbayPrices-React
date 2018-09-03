@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Link } from 'react-router-dom';
-import { ApiCategory } from './';
+import { Input, ApiCategory } from './';
 
 import './searchForm.css';
 
@@ -10,6 +10,7 @@ class SearchForm extends Component {
 
   state = {
     apiCategory: 'mens',
+    keywords: '',
     sale: '20',
     buyerShipping: '10.50'
   }
@@ -56,17 +57,17 @@ class SearchForm extends Component {
         </div>
 
         <form className="searchInputFields" onChange={this.onChange} onBlur={this.updateData}>
-          <div className="group1">
-            <input type="text" name="keywords" placeholder="Search" value={this.state.keywords}/>
+          <div className="input-group">
+            <Input type="text" name="keywords" text="Search" value={this.state.keywords}/>
+          </div>
+          <div className="input-group">
             <ApiCategory apiCategory={this.state.apiCategory} changeApiCategory={this.changeApiCategory}/>
           </div>
-          <div className="group2">
-            <input type="number" name="markedPrice" placeholder="markedPrice" value={this.state.markedPrice}/>
-            <input type="number" name="profit" placeholder="profit" value={this.state.profit}/>
-          </div>
-          <div className="group3">
-            <input type="number" name="sale" value={this.state.sale}/>
-            <input type="number" name="buyerShipping" value={this.state.buyerShipping}/>
+          <div className="input-group">
+            <Input type="number" name="markedPrice" text="Store Price" unit="$" value={this.state.markedPrice}/>
+            <Input type="number" name="profit" text="Desired Profit" unit="$" value={this.state.profit}/>
+            <Input type="number" name="sale" text="Store Sale" unit="%" value={this.state.sale}/>
+            <Input type="number" name="buyerShipping" text="Buyer Shipping Cost" unit="$" value={this.state.buyerShipping}/>
           </div>
         </form>
       </div>

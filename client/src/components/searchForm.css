@@ -3,7 +3,7 @@
   
   box-sizing: border-box;
   width: 100%;
-  padding: 20px;
+  padding: 10px;
   
   display: flex;
   flex-direction: column;
@@ -44,28 +44,4 @@
   justify-content: space-around;
 }
 
-.searchInputFields input[type='text'],
-.searchInputFields input[type='number'] {
-  display: block;
-  box-sizing: border-box;
-  height: 50px;
-  width: 100%;
-  
-  background: #FFF;
-  border: 2px solid #000;
-  border-radius: 2px;
-  padding: 5px;
-  margin-bottom: 10px;
 
-  font-size: x-large;
-  text-align: center;
-}
-
-.searchInputFields input:focus,
-.searchInputFields input:focus {
-  outline: none;
-}
-
-.searchInputFields input[name='keywords'] {
-  width: 100%;
-}
