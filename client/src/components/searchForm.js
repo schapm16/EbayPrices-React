@@ -8,6 +8,8 @@ import './searchForm.css';
 class SearchForm extends Component {
   lastApiParameters = this.props.lastApiParameters
 
+  inputTimer = '';
+
   state = {
     apiCategory: 'mens',
     keywords: '',
@@ -17,9 +19,7 @@ class SearchForm extends Component {
 
   changeApiCategory = (event) => {
     let apiCategory = (event.target.id === 'mens') ? 'mens' : 'womens';
-    this.setState({
-      apiCategory
-    });
+    this.setState({apiCategory}, () => {this.updateData()});
   }
 
   shouldRequestData = () => {
@@ -28,10 +28,14 @@ class SearchForm extends Component {
   }
 
   onChange = (event) => {
+    clearTimeout(this.inputTimer);
+
     let { target } = event;
     this.setState({
       [target.name]: target.value
     });
+
+    this.inputTimer = setTimeout(this.updateData, 500);
   }
 
   updateData = () => {
@@ -45,6 +49,11 @@ class SearchForm extends Component {
     this.props.onDone(this.state);
   }
 
+  componentWillUnmount() {
+    console.log('Search unmounted');
+    clearTimeout(this.inputTimer);
+  }
+
 
   render() {
     return (
@@ -56,7 +65,7 @@ class SearchForm extends Component {
           </Link>
         </div>
 
-        <form className="searchInputFields" onChange={this.onChange} onBlur={this.updateData}>
+        <form className="searchInputFields" onChange={this.onChange}>
           <div className="input-group">
             <Input type="text" name="keywords" text="Search" value={this.state.keywords}/>
           </div>
