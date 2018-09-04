@@ -17,7 +17,7 @@ const Input = ({ type, name, text, unit, value }) => {
         <input type={type} id={name} name={name} value= {value}/>
         {(unit === '%') ? <span className="symbol">%</span> : null}
       </label>
-      <span className="input-label" for={name}>{text}</span>
+      <span className="input-label">{text}</span>
     </div>
   );
 }
