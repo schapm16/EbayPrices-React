@@ -31,11 +31,9 @@ class SearchForm extends Component {
     clearTimeout(this.inputTimer);
 
     let { target } = event;
-    this.setState({
-      [target.name]: target.value
+    this.setState({[target.name]: target.value}, () => {
+      this.inputTimer = setTimeout(this.updateData, 1000);
     });
-
-    this.inputTimer = setTimeout(this.updateData, 500);
   }
 
   updateData = () => {
@@ -50,7 +48,6 @@ class SearchForm extends Component {
   }
 
   componentWillUnmount() {
-    console.log('Search unmounted');
     clearTimeout(this.inputTimer);
   }
 
