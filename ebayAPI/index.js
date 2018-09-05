@@ -61,7 +61,17 @@ module.exports = {
       }
     };
 
-    options = addItemFilters(options, [{name: 'SoldItemsOnly', value: 'true'}]);
+    options = addItemFilters(options, [
+      {
+        name: 'SoldItemsOnly', 
+        value: 'true'
+      },
+      {    
+        name: 'EndTimeTo',
+        value: req.query.timeStamp 
+      }
+    ]);
+
     options = specifyPagination(options, req.query.page);
 
     return ebayEndpoint(options)
@@ -81,7 +91,7 @@ module.exports = {
       }
     }
 
-    options = addItemFilters(options);
+    options = addItemFilters(options, [{name: 'StartTimeTo', value: req.query.timeStamp}]);
     options = specifyPagination(options, req.query.page);
 
     return ebayEndpoint(options)

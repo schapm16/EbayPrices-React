@@ -9,6 +9,8 @@ import { Route } from 'react-router-dom';
 import { SearchBar, TopBar, ListingsContainer, SearchForm } from './components'; 
 
 class App extends Component {
+  onListingScrollEnd_APICall_Flag = true;
+
   lastApiParameters = {
     keywords: '',
     apiCategory: '' 
@@ -31,20 +33,20 @@ class App extends Component {
 
   updateData = (passedSearchParameters, shouldRequestData) => {
     let currentSearchParameters = this.state.searchParameters;
-
     if (passedSearchParameters) {
       for (let prop in passedSearchParameters) {
         currentSearchParameters[prop] = passedSearchParameters[prop];
       }
     }
 
-    let { keywords, apiMode, apiCategory, page, ...myPricingData } = currentSearchParameters;
-
+    let { keywords, apiMode, apiCategory, page, timeStamp, ...myPricingData } = currentSearchParameters;
+    console.log(timeStamp);
     if (shouldRequestData) {
-      api.get(apiMode, {
+      return api.get(apiMode, {
           keywords,
           apiCategory: apiCategory,
-          page: '1'
+          page: page,
+          timeStamp: timeStamp || new Date().toISOString()
         })
         .then(listingData => {
           this.lastApiParameters = { keywords, apiCategory };
@@ -55,6 +57,7 @@ class App extends Component {
     } else {
       this.lastApiParameters = { keywords, apiCategory }
       this.handleData(myPricingData, null);
+      return Promise.resolve();
     }
   }
   
@@ -77,11 +80,31 @@ class App extends Component {
       for (let prop in passedSearchParameters) {
         searchParameters[prop] = passedSearchParameters[prop];
       }
+
+      searchParameters.page = '1';
+      searchParameters.timeStamp = new Date().toISOString();
       
       listings = this.futureState.listings;
       myOverallStats = this.futureState.myOverallStats;
       return { searchParameters, listings, myOverallStats };
     });
+  }
+
+  onListingScrollEnd = ({ target }) => {
+    let page = parseInt(this.state.searchParameters.page, 10) + 1;
+    let { offsetHeight, scrollTop, scrollHeight } = target;
+
+    if (scrollHeight - offsetHeight - scrollTop < 600 && this.onListingScrollEnd_APICall_Flag) {
+      this.onListingScrollEnd_APICall_Flag = false;
+      this.updateData({ page }, true)
+        .then(() => {
+          this.setState(({ searchParameters, listings }) => {
+            listings = listings.concat(this.futureState.listings);
+            searchParameters.page = page;
+            return { searchParameters, listings };
+          }, () => this.onListingScrollEnd_APICall_Flag = true)
+        });
+    }
   }
 
   render() {
@@ -94,7 +117,7 @@ class App extends Component {
         )} />
 
         <Route exact path="/listings" render={() => (
-          <ListingsContainer id="listings" listings={this.state.listings}/>
+          <ListingsContainer listings={this.state.listings} onListingScrollEnd = {this.onListingScrollEnd}/>
         )} />
         
         <Route exact path="/search" render={() => (        

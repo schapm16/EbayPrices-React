@@ -5,10 +5,10 @@ import './listingsContainer.css';
 import { Listing } from './';
 
 
-const ListingsContainer = ({ listings }) => {
+const ListingsContainer = ({ listings, onListingScrollEnd }) => {
 
   return (
-    <div id="listingsContainer">
+    <div id="listingsContainer" onScroll={onListingScrollEnd}>
       {listings.map((listing) => {
         return <Listing key={listing.itemId} listing={listing}/>
       })}
