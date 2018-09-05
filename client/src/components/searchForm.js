@@ -43,8 +43,10 @@ class SearchForm extends Component {
   } 
 
   onDone = () => {
-    this.props.updateData(this.state, this.shouldRequestData());
-    this.props.onDone(this.state);
+    this.props.updateData(this.state, this.shouldRequestData())
+      .then(() => {
+        this.props.onDone(this.state);
+      })
   }
 
   componentWillUnmount() {
