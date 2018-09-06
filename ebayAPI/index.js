@@ -1,7 +1,9 @@
 const request = require('request-promise-native');
-const devUtils = require('./devUtils');
 
-devUtils.logRequests(request);
+if (!process.env.NODE_ENV === "production") {
+  const devUtils = require('./devUtils');
+  devUtils.logRequests(request);
+}
 
 
 const ebayEndpoint = request.defaults({
