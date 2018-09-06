@@ -1,12 +1,12 @@
 import utils from '../utils';
 
-const default_buyerShipping = 10.50,
+const default_buyerShipping = 0,
     default_stateTax = 0.075,
     default_ebayShippingDiscount = 0.25,
     default_ebayFee = 0.1,
     default_paypalFeeRate = 0.029,
     default_paypalFeeFixed = 0.3,
-    default_sale = 20
+    default_sale = 0;
 
 
 export default {

@@ -40,7 +40,6 @@ class App extends Component {
     }
 
     let { keywords, apiMode, apiCategory, page, timeStamp, ...myPricingData } = currentSearchParameters;
-    console.log(timeStamp);
     if (shouldRequestData) {
       return api.get(apiMode, {
           keywords,
@@ -94,17 +93,18 @@ class App extends Component {
     let page = parseInt(this.state.searchParameters.page, 10) + 1;
     let { offsetHeight, scrollTop, scrollHeight } = target;
 
-    if (scrollHeight - offsetHeight - scrollTop < 600 && this.onListingScrollEnd_APICall_Flag) {
-      this.onListingScrollEnd_APICall_Flag = false;
-      this.updateData({ page }, true)
-        .then(() => {
-          this.setState(({ searchParameters, listings }) => {
-            listings = listings.concat(this.futureState.listings);
-            searchParameters.page = page;
-            return { searchParameters, listings };
-          }, () => this.onListingScrollEnd_APICall_Flag = true)
-        });
-    }
+    if (scrollHeight - offsetHeight - scrollTop > 600 || !this.onListingScrollEnd_APICall_Flag) return;
+    
+    this.onListingScrollEnd_APICall_Flag = false;
+    this.updateData({ page }, true)
+      .then(() => {
+        this.setState(({ searchParameters, listings }) => {
+          listings = listings.concat(this.futureState.listings);
+          searchParameters.page = page;
+          return { searchParameters, listings };
+        }, () => this.onListingScrollEnd_APICall_Flag = true)
+      });
+    
   }
 
   render() {

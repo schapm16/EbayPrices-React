@@ -22,18 +22,49 @@ class SearchForm extends Component {
     this.setState({apiCategory}, () => {this.updateData()});
   }
 
-  shouldRequestData = () => {
-    return (this.state.keywords !== this.lastApiParameters.keywords) ||
-           (this.state.apiCategory !== this.lastApiParameters.apiCategory);
+  transformInput = ({ name, value}) => {
+    let match;
+    switch (name) {
+      case 'markedPrice':
+      case 'profit':
+      case 'buyerShipping': 
+        match = value.match(/[1-9]\d*\.?\d?\d?/);
+        value = (match) ? match[0] : '0';
+        return { name, value };
+
+      case 'sale':
+        match = value.match(/[1-9]\d?/);
+        value = (match) ? match[0] : '0';
+        return { name, value };
+
+      default:
+        return { name, value };
+    }
+  }
+
+  isValidInput = () => {
+    let { keywords, markedPrice, profit, sale, buyerShipping } = this.state
+
+    if (keywords.length < 4) return false;
+    return true;
   }
 
   onChange = (event) => {
     clearTimeout(this.inputTimer);
 
-    let { target } = event;
-    this.setState({[target.name]: target.value}, () => {
-      this.inputTimer = setTimeout(this.updateData, 1000);
+    let { name, value } = this.transformInput(event.target);
+
+    this.setState({[name]: value}, () => {
+      this.inputTimer = setTimeout(() => {
+      if(this.isValidInput()) this.updateData();
+      }, 1000);
     });
+    
+  }
+
+  shouldRequestData = () => {
+    return (this.state.keywords !== this.lastApiParameters.keywords) ||
+           (this.state.apiCategory !== this.lastApiParameters.apiCategory);
   }
 
   updateData = () => {
@@ -44,9 +75,7 @@ class SearchForm extends Component {
 
   onDone = () => {
     this.props.updateData(this.state, this.shouldRequestData())
-      .then(() => {
-        this.props.onDone(this.state);
-      })
+      .then(() => this.props.onDone(this.state))
   }
 
   componentWillUnmount() {
@@ -72,10 +101,10 @@ class SearchForm extends Component {
             <ApiCategory apiCategory={this.state.apiCategory} changeApiCategory={this.changeApiCategory}/>
           </div>
           <div className="input-group">
-            <Input type="number" name="markedPrice" text="Store Price" unit="$" value={this.state.markedPrice}/>
-            <Input type="number" name="profit" text="Desired Profit" unit="$" value={this.state.profit}/>
-            <Input type="number" name="sale" text="Store Sale" unit="%" value={this.state.sale}/>
-            <Input type="number" name="buyerShipping" text="Buyer Shipping Cost" unit="$" value={this.state.buyerShipping}/>
+            <Input type="text" name="markedPrice" text="Store Price" unit="$" value={this.state.markedPrice}/>
+            <Input type="text" name="profit" text="Desired Profit" unit="$" value={this.state.profit}/>
+            <Input type="text" name="sale" text="Store Sale" unit="%" value={this.state.sale}/>
+            <Input type="text" name="buyerShipping" text="Buyer Shipping Cost" unit="$" value={this.state.buyerShipping}/>
           </div>
         </form>
       </div>
