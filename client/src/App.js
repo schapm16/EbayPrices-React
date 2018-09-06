@@ -93,7 +93,7 @@ class App extends Component {
     let page = parseInt(this.state.searchParameters.page, 10) + 1;
     let { offsetHeight, scrollTop, scrollHeight } = target;
 
-    if (scrollHeight - offsetHeight - scrollTop > 600 || !this.onListingScrollEnd_APICall_Flag) return;
+    if (scrollHeight - offsetHeight - scrollTop > 2000 || !this.onListingScrollEnd_APICall_Flag) return;
     
     this.onListingScrollEnd_APICall_Flag = false;
     this.updateData({ page }, true)
