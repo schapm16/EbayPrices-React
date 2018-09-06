@@ -1,6 +1,6 @@
 const request = require('request-promise-native');
 
-if (!process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV !== "production") {
   const devUtils = require('./devUtils');
   devUtils.logRequests(request);
 }
