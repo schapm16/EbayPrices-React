@@ -36,7 +36,11 @@ function transformPagination(paginationOutput) {
 
 module.exports = (ebayAPIData) => {
   let accessedData;
-  let transformedData = {}
+  let transformedData = {
+    listings: [],
+    pagination: {},
+    timestamp: ''
+  }
   
   if (ebayAPIData.findCompletedItemsResponse){
     accessedData = ebayAPIData.findCompletedItemsResponse[0];
@@ -44,7 +48,13 @@ module.exports = (ebayAPIData) => {
   else if (ebayAPIData.findItemsAdvancedResponse) {
     accessedData = ebayAPIData.findItemsAdvancedResponse[0];
   }
+  else {
+    return transformedData;
+  }
   
+  if (accessedData.searchResult[0]['@count'] === '0') return transformedData;
+
+
   transformedData.listings = transformListings(accessedData.searchResult[0].item);
   transformedData.pagination = transformPagination(accessedData.paginationOutput[0]);
   transformedData.timestamp = accessedData.timestamp[0];
