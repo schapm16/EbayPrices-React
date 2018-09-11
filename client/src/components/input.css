@@ -12,6 +12,10 @@
 
 }
 
+.input-field .input-box.highlight {
+  border-color: orange;
+}
+
 .input-field .input-box.justify-right {
   justify-content: flex-end;
 }
@@ -51,4 +55,8 @@
 
   background: #FFF;
 
+}
+
+.input-field .input-label.highlight {
+  color: orange;
 }

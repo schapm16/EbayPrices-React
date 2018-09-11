@@ -1,0 +1,32 @@
+.searchStatus-searching {
+  font-size: 40px;
+  animation: flashing 0.5s linear 0s infinite alternate;
+}
+
+.searchStatus-done {
+  color: green;
+  animation: pop 0.4s linear;
+  font-size: 40px;
+}
+
+.searchStatus-message {
+  color: orange;
+}
+
+
+
+@keyframes pop {
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes flashing {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

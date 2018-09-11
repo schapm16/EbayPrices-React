@@ -20,6 +20,7 @@
 .searchHeader .back-icon {
   color: black;
   text-decoration: none;
+  width: 60px;
 }
 
 .searchHeader button {
@@ -35,6 +36,10 @@
   outline: none;
 }
 
+.searchHeader button[disabled] {
+  opacity: 0.5;
+}
+
 .searchInputFields {
   width: 100%;
   flex-grow: 1;
@@ -43,5 +48,3 @@
   flex-direction: column;
   justify-content: space-around;
 }
-
-

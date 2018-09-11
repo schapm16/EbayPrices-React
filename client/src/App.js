@@ -32,7 +32,7 @@ class App extends Component {
   }
 
   updateData = (passedSearchParameters, shouldRequestData) => {
-    let currentSearchParameters = this.state.searchParameters;
+    let currentSearchParameters = Object.assign({}, this.state.searchParameters);
     if (passedSearchParameters) {
       for (let prop in passedSearchParameters) {
         currentSearchParameters[prop] = passedSearchParameters[prop];
@@ -48,9 +48,11 @@ class App extends Component {
           timeStamp: timeStamp || new Date().toISOString()
         })
         .then(listingData => {
+          if (listingData.listings.length === 0) return listingData;
           this.lastApiParameters = { keywords, apiCategory };
           this.futureState.listings = listingData;
           this.handleData(myPricingData, listingData);
+          return listingData;
         })
         .catch(error => console.log(error));
     } else {

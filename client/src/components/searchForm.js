@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 
-import { Link } from 'react-router-dom';
-import { Input, ApiCategory } from './';
+import { Link, Redirect } from 'react-router-dom';
+import { ApiCategory, Input, SearchStatus } from './';
 
 import './searchForm.css';
 
 class SearchForm extends Component {
   lastApiParameters = this.props.lastApiParameters
-
   inputTimer = '';
 
   state = {
     apiCategory: 'mens',
     keywords: '',
     sale: '20',
-    buyerShipping: '10.50'
+    buyerShipping: '10.50',
   }
 
   changeApiCategory = (event) => {
@@ -42,11 +41,17 @@ class SearchForm extends Component {
     }
   }
 
-  isValidInput = () => {
-    let { keywords, markedPrice, profit, sale, buyerShipping } = this.state
+  setSearchStatus = (listingData) => {
+    let { keywords, markedPrice, profit } = this.state
+    let searchStatus = '';
 
-    if (keywords.length < 4) return false;
-    return true;
+    if (keywords.length < 4) searchStatus = 'keywords length';
+    else if (listingData && listingData.listings.length === 0) searchStatus = 'no results';
+    else if (!markedPrice) searchStatus = 'price null';
+    else if (!profit) searchStatus = 'profit null';
+    else searchStatus = 'done';
+
+    this.setState({ searchStatus });
   }
 
   onChange = (event) => {
@@ -54,12 +59,13 @@ class SearchForm extends Component {
 
     let { name, value } = this.transformInput(event.target);
 
-    this.setState({[name]: value}, () => {
+    this.setState({[name]: value, searchStatus: 'searching'}, () => {
       this.inputTimer = setTimeout(() => {
-      if(this.isValidInput()) this.updateData();
+      this.updateData().then((listingData) => {
+        this.setSearchStatus(listingData);
+      });
       }, 1000);
     });
-    
   }
 
   shouldRequestData = () => {
@@ -68,14 +74,18 @@ class SearchForm extends Component {
   }
 
   updateData = () => {
-    this.props.updateData(this.state, this.shouldRequestData());
-    this.lastApiParameters.keywords = this.state.keywords;
-    this.lastApiParameters.apiCategory = this.state.apiCategory;
+    return this.props.updateData(this.state, this.shouldRequestData())
+      .then((listingData) => {
+        this.lastApiParameters.keywords = this.state.keywords;
+        this.lastApiParameters.apiCategory = this.state.apiCategory;
+        return listingData;    
+      })
   } 
 
   onDone = () => {
-    this.props.updateData(this.state, this.shouldRequestData())
-      .then(() => this.props.onDone(this.state))
+    this.props.onDone(this.state);
+    this.setState({doneClicked: true});  
+    
   }
 
   componentWillUnmount() {
@@ -84,25 +94,29 @@ class SearchForm extends Component {
 
 
   render() {
+    if (this.state.doneClicked) return <Redirect to='/listings'/>;
+    
     return (
       <div className="searchContainer">
         <div className="searchHeader">
           <Link to="/listings" className="material-icons back-icon">arrow_back_ios</Link>
-          <Link to="listings">
-            <button type="button" onClick={this.onDone}>Done</button>
-          </Link>
+          <SearchStatus status={this.state.searchStatus}/>
+          <button type="button" onClick={this.onDone} disabled={this.state.searchStatus !== 'done'}>Results</button>
         </div>
 
         <form className="searchInputFields" onChange={this.onChange}>
           <div className="input-group">
-            <Input type="text" name="keywords" text="Search" value={this.state.keywords}/>
+            <Input type="text" name="keywords" text="Search" value={this.state.keywords} autoFocus
+              highlight={this.state.searchStatus === 'keywords length' || this.state.searchStatus === 'no results'}/>
           </div>
           <div className="input-group">
             <ApiCategory apiCategory={this.state.apiCategory} changeApiCategory={this.changeApiCategory}/>
           </div>
           <div className="input-group">
-            <Input type="text" name="markedPrice" text="Store Price" unit="$" value={this.state.markedPrice}/>
-            <Input type="text" name="profit" text="Desired Profit" unit="$" value={this.state.profit}/>
+            <Input type="text" name="markedPrice" text="Store Price" unit="$" value={this.state.markedPrice}
+              highlight={this.state.searchStatus === 'price null'}/>
+            <Input type="text" name="profit" text="Desired Profit" unit="$" value={this.state.profit}
+              highlight={this.state.searchStatus==='profit null'}/>
             <Input type="text" name="sale" text="Store Sale" unit="%" value={this.state.sale}/>
             <Input type="text" name="buyerShipping" text="Buyer Shipping Cost" unit="$" value={this.state.buyerShipping}/>
           </div>
