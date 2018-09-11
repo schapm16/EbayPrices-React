@@ -1,22 +1,21 @@
-.apiCategory {
+.input-switch {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
 }
 
-.apiCategory button,
-.apiCategory button:focus {
+.input-switch button,
+.input-switch button:focus {
   width: 40%;
   background: #FFF;
   color: #000;
-  font-size: x-large;
-  
+  font-size: inherit;  
   padding: 5px;
   border-radius: 2px;  
   border: none;
   outline: none;
 }
 
-.apiCategory button.active {
+.input-switch button.active {
   background: #000;
   color: #FFF;
 }

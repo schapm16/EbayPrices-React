@@ -5,7 +5,7 @@ import Listing from './listing';
 import SearchForm from './searchForm';
 import SearchStatus from './searchStatus';
 import Input from './input';
-import ApiCategory from './apiCategory';
+import InputSwitch from './inputSwitch';
 
 
 export {
@@ -16,5 +16,5 @@ export {
   SearchForm,
   SearchStatus,
   Input,
-  ApiCategory
+  InputSwitch
 }

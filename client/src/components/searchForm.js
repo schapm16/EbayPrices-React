@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Link, Redirect } from 'react-router-dom';
-import { ApiCategory, Input, SearchStatus } from './';
+import { Input, InputSwitch, SearchStatus } from './';
 
 import './searchForm.css';
 
@@ -106,19 +106,62 @@ class SearchForm extends Component {
 
         <form className="searchInputFields" onChange={this.onChange}>
           <div className="input-group">
-            <Input type="text" name="keywords" text="Search" value={this.state.keywords} autoFocus
-              highlight={this.state.searchStatus === 'keywords length' || this.state.searchStatus === 'no results'}/>
+            <Input 
+              type="text" 
+              name="keywords" text="Search" 
+              value={this.state.keywords} 
+              autoFocus
+              highlight={this.state.searchStatus === 'keywords length' || this.state.searchStatus === 'no results'}
+            />
           </div>
           <div className="input-group">
-            <ApiCategory apiCategory={this.state.apiCategory} changeApiCategory={this.changeApiCategory}/>
+            <InputSwitch 
+              options={{
+                one: { 
+                  display: 'Men\'s', 
+                  value: 'mens'
+                },
+                two: { 
+                  display: 'Women\'s',
+                  value: 'womens'
+                }
+              }} 
+              switchState={this.state.apiCategory} 
+              onClick={this.changeApiCategory}
+              fontSize='fs-xlg'
+            />
           </div>
           <div className="input-group">
-            <Input type="text" name="markedPrice" text="Store Price" unit="$" value={this.state.markedPrice}
-              highlight={this.state.searchStatus === 'price null'}/>
-            <Input type="text" name="profit" text="Desired Profit" unit="$" value={this.state.profit}
-              highlight={this.state.searchStatus==='profit null'}/>
-            <Input type="text" name="sale" text="Store Sale" unit="%" value={this.state.sale}/>
-            <Input type="text" name="buyerShipping" text="Buyer Shipping Cost" unit="$" value={this.state.buyerShipping}/>
+            <Input 
+              type="text" 
+              name="markedPrice" 
+              text="Store Price" 
+              unit="$" 
+              value={this.state.markedPrice}
+              highlight={this.state.searchStatus === 'price null'}
+            />
+            <Input 
+              type="text" 
+              name="profit" 
+              text="Desired Profit" 
+              unit="$" 
+              value={this.state.profit}
+              highlight={this.state.searchStatus==='profit null'}
+            />
+            <Input 
+              type="text" 
+              name="sale" 
+              text="Store Sale" 
+              unit="%" 
+              value={this.state.sale}
+            />
+            <Input 
+              type="text" 
+              name="buyerShipping" 
+              text="Buyer Shipping Cost" 
+              unit="$" 
+              value={this.state.buyerShipping}
+            />
           </div>
         </form>
       </div>
