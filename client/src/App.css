@@ -9,7 +9,7 @@ body {
 #root {
   display: flex;
   justify-content: center;
-  height: 95vh;
+  height: 100vh;
 }
 
 #container {

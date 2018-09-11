@@ -6,7 +6,7 @@ import calc from './calcs';
 import api from './api';
 
 import { Route } from 'react-router-dom';
-import { SearchBar, TopBar, ListingsContainer, SearchForm } from './components'; 
+import { SearchBar, TopBar, ListingsContainer, BottomBar, InputSwitch, SearchForm } from './components'; 
 
 class App extends Component {
   onListingScrollEnd_APICall_Flag = true;
@@ -78,8 +78,10 @@ class App extends Component {
 
   onDone = (passedSearchParameters) => {
     this.setState(({searchParameters, listings, myOverallStats}) => {
-      for (let prop in passedSearchParameters) {
-        searchParameters[prop] = passedSearchParameters[prop];
+      if (passedSearchParameters) {
+        for (let prop in passedSearchParameters) {
+          searchParameters[prop] = passedSearchParameters[prop];
+        }
       }
 
       searchParameters.page = '1';
@@ -106,7 +108,23 @@ class App extends Component {
           return { searchParameters, listings };
         }, () => this.onListingScrollEnd_APICall_Flag = true)
       });
-    
+  }
+
+  onAPIModeChange = ({ target }) => {
+    let apiMode = target.id;
+
+    this.setState(({ searchParameters, listings }) => {
+      searchParameters.apiMode = apiMode;
+      searchParameters.page = '1';
+      searchParameters.timeStamp = new Date().toISOString();
+      listings = [];
+
+      return { searchParameters, listings };
+    },
+
+    () => this.updateData(null, true)
+            .then(() => this.onDone())
+    ); 
   }
 
   render() {
@@ -115,13 +133,28 @@ class App extends Component {
         <SearchBar/>
 
         <Route exact path="/listings" render={() => (
-          <TopBar myOverallStats={this.state.myOverallStats}/>
+          <React.Fragment>
+            <TopBar myOverallStats={this.state.myOverallStats}/>
+            <ListingsContainer listings={this.state.listings} onListingScrollEnd = {this.onListingScrollEnd}/>
+            <BottomBar>
+              <InputSwitch 
+                options={{
+                  one: {
+                    display: 'Sold Listings',
+                    value: 'sold-listings'
+                  },
+                  two: {
+                    display: 'Active Listings',
+                    value: 'active-listings'
+                  }
+                }}
+                switchState={this.state.searchParameters.apiMode} 
+                onClick={this.onAPIModeChange}
+              />
+            </BottomBar>
+          </React.Fragment>
         )} />
 
-        <Route exact path="/listings" render={() => (
-          <ListingsContainer listings={this.state.listings} onListingScrollEnd = {this.onListingScrollEnd}/>
-        )} />
-        
         <Route exact path="/search" render={() => (        
           <SearchForm lastApiParameters={this.lastApiParameters} updateData={this.updateData} onDone={this.onDone}/>
         )} />

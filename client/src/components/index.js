@@ -2,6 +2,7 @@ import SearchBar from './searchBar';
 import TopBar from './topBar';
 import ListingsContainer from './listingsContainer';
 import Listing from './listing';
+import BottomBar from './bottomBar';
 import SearchForm from './searchForm';
 import SearchStatus from './searchStatus';
 import Input from './input';
@@ -12,6 +13,7 @@ export {
   SearchBar,
   TopBar,
   ListingsContainer,
+  BottomBar,
   Listing,
   SearchForm,
   SearchStatus,

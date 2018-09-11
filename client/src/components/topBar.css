@@ -1,15 +1,17 @@
 .topBar {
-  flex: 0 0 90px;
-
+  flex: 0 0 80px;
   width: 100%;
-  z-index: 1;
-  
+  z-index: 1; 
+  box-shadow: 0 0 5px #eee; 
+}
+
+.topBar .panel-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 0 5px #eee;
+  
 }
 
-.topBar p {
+.topBar .panel-top p {
   margin: 10px;
 }

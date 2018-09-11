@@ -1,6 +1,6 @@
 #listingsContainer {
   width: 100%;
-  flex: 0 0 75vh;
+  flex: 1 1; 
 
   overflow: scroll;
 }
