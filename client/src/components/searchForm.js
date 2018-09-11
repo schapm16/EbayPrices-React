@@ -133,7 +133,7 @@ class SearchForm extends Component {
           </div>
           <div className="input-group">
             <Input 
-              type="text" 
+              type="number" 
               name="markedPrice" 
               text="Store Price" 
               unit="$" 
@@ -141,7 +141,7 @@ class SearchForm extends Component {
               highlight={this.state.searchStatus === 'price null'}
             />
             <Input 
-              type="text" 
+              type="number" 
               name="profit" 
               text="Desired Profit" 
               unit="$" 
@@ -149,14 +149,14 @@ class SearchForm extends Component {
               highlight={this.state.searchStatus==='profit null'}
             />
             <Input 
-              type="text" 
+              type="number" 
               name="sale" 
               text="Store Sale" 
               unit="%" 
               value={this.state.sale}
             />
             <Input 
-              type="text" 
+              type="number" 
               name="buyerShipping" 
               text="Buyer Shipping Cost" 
               unit="$" 

@@ -19,3 +19,9 @@
   background: #000;
   color: #FFF;
 }
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
