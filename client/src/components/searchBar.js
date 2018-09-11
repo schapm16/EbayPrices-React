@@ -8,7 +8,7 @@ const SearchBar = () => {
   return(
     <div className="searchBar">
       <Link to="/search" className="material-icons search-icon fs-xlg">search</Link>
-      <span className="fs-xlg fw-md">Ebay PriceFinder</span>
+      <span className="fs-xlg fw-md">Ebay PriceChecker</span>
     </div>
 
   );
