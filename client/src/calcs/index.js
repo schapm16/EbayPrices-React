@@ -33,9 +33,10 @@ export default {
     myOverallStats = utils.objToFloat(Object.assign({},myOverallStats));
 
     let myListingStats = {};
+    let listingTotalPrice = parseFloat(listing.price) + parseFloat(listing.shippingCost);
     
-    myListingStats.priceDiff = myOverallStats.costToBuyer - parseFloat(listing.price);
-    myListingStats.priceDiffPerc = myListingStats.priceDiff / parseFloat(listing.price) * 100;
+    myListingStats.priceDiff = myOverallStats.costToBuyer - listingTotalPrice;
+    myListingStats.priceDiffPerc = myListingStats.priceDiff / listingTotalPrice * 100;
 
     return utils.objToTwoDecimals(myListingStats);
   }
