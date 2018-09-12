@@ -8,6 +8,20 @@ function transformListings(listings) {
     let endTime = moment(listing.listingInfo[0].endTime[0]);
     let durationTime = moment.duration(endTime.diff(startTime));
 
+    let listingType = listing.listingInfo[0].listingType[0];
+
+    switch (listingType) {
+      case 'Auction':
+      case 'AuctionWithBIN':
+        listingType = 'Auction';
+        break;
+      case 'FixedPrice':
+      case 'StoreInventory':
+        listingType = 'Buy it now';
+      break;
+      default: listingType = '';
+    }
+
     return {
       itemId: listing.itemId[0],
       title: listing.title[0],
@@ -18,6 +32,7 @@ function transformListings(listings) {
       startTime: startTime.format('MM/DD/YYYY HH:mm'),
       endTime: endTime.format('MM/DD/YYYY HH:mm'),
       durationTime: Math.round(durationTime.asDays()).toString(),
+      listingType,
       condition: listing.condition[0].conditionDisplayName[0],
       isMultiVariationListing: listing.isMultiVariationListing[0]
     }

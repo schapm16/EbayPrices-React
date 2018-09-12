@@ -11,6 +11,7 @@ const Listing = ({ listing }) => {
     <div className="listing fw-li">
       <p className="fw-md fs-lg">{listing.title}</p>
       <p className="fs-sm">{listing.condition}</p>
+      <p className="fs-sm">{listing.listingType}</p>
       <div className="panel1">
         <div className="panel1-left">
           <p className="fw-nm">Compare:</p>
