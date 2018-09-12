@@ -13,7 +13,7 @@ class SearchForm extends Component {
     apiCategory: 'mens',
     keywords: '',
     sale: '20',
-    buyerShipping: '10.50',
+    buyerShipping: '10.50'
   }
 
   changeApiCategory = (event) => {

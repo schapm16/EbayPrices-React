@@ -17,13 +17,15 @@ class App extends Component {
   }
 
   futureState = {
-    listings: [],
-    myOverallStats: {}
+    totalPages: 0,
+    myOverallStats: {},
+    listings: []
   }
   
   state = {
-    listings: [],
+    totalPages: 0,
     myOverallStats: {},
+    listings: [],
     searchParameters: {
       apiMode: 'sold-listings',
       apiCategory: 'mens',
@@ -50,7 +52,7 @@ class App extends Component {
         .then(listingData => {
           if (listingData.listings.length === 0) return listingData;
           this.lastApiParameters = { keywords, apiCategory };
-          this.futureState.listings = listingData;
+          this.futureState.listings = listingData.listings;
           this.handleData(myPricingData, listingData);
           return listingData;
         })
@@ -63,6 +65,7 @@ class App extends Component {
   }
   
   handleData = (myPricingData, listingData) => {
+    let totalPages = (listingData) ? listingData.pagination.totalPages : this.futureState.totalPages;
     let myOverallStats = calc.myOverallStats(myPricingData);
     let listings = (listingData) ? listingData.listings : this.futureState.listings;
 
@@ -71,13 +74,14 @@ class App extends Component {
     })
 
     this.futureState = {
+      totalPages,
+      myOverallStats,
       listings,
-      myOverallStats
     };
   }
 
   onDone = (passedSearchParameters) => {
-    this.setState(({searchParameters, listings, myOverallStats}) => {
+    this.setState(({searchParameters, totalPages, myOverallStats, listings}) => {
       if (passedSearchParameters) {
         for (let prop in passedSearchParameters) {
           searchParameters[prop] = passedSearchParameters[prop];
@@ -87,18 +91,20 @@ class App extends Component {
       searchParameters.page = '1';
       searchParameters.timeStamp = new Date().toISOString();
       
+      totalPages = this.futureState.totalPages;
       listings = this.futureState.listings;
       myOverallStats = this.futureState.myOverallStats;
-      return { searchParameters, listings, myOverallStats };
+      return { searchParameters, totalPages, myOverallStats, listings };
     });
   }
 
   onListingScrollEnd = ({ target }) => {
-    let page = parseInt(this.state.searchParameters.page, 10) + 1;
     let { offsetHeight, scrollTop, scrollHeight } = target;
-
-    if (scrollHeight - offsetHeight - scrollTop > 2000 || !this.onListingScrollEnd_APICall_Flag) return;
+    if (scrollHeight - offsetHeight - scrollTop > offsetHeight * 2 || !this.onListingScrollEnd_APICall_Flag) return;
     
+    let page = parseInt(this.state.searchParameters.page, 10) + 1;
+    if (page > parseInt(this.state.totalPages, 10)) return;
+
     this.onListingScrollEnd_APICall_Flag = false;
     this.updateData({ page }, true)
       .then(() => {
@@ -111,6 +117,7 @@ class App extends Component {
   }
 
   onAPIModeChange = ({ target }) => {
+    if (this.state.listings.length === 0) return;
     let apiMode = target.id;
 
     this.setState(({ searchParameters, listings }) => {
