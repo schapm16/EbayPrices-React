@@ -18,7 +18,7 @@ class SearchForm extends Component {
 
   changeApiCategory = (event) => {
     let apiCategory = (event.target.id === 'mens') ? 'mens' : 'womens';
-    this.setState({apiCategory}, () => {this.updateData()});
+    this.setState({apiCategory}, () => this.updateData());
   }
 
   transformInput = ({ name, value}) => {
@@ -61,9 +61,8 @@ class SearchForm extends Component {
 
     this.setState({[name]: value, searchStatus: 'searching'}, () => {
       this.inputTimer = setTimeout(() => {
-      this.updateData().then((listingData) => {
-        this.setSearchStatus(listingData);
-      });
+      this.updateData()
+        .then((listingData) => this.setSearchStatus(listingData));
       }, 1000);
     });
   }
@@ -76,8 +75,8 @@ class SearchForm extends Component {
   updateData = () => {
     return this.props.updateData(this.state, this.shouldRequestData())
       .then((listingData) => {
-        this.lastApiParameters.keywords = this.state.keywords;
-        this.lastApiParameters.apiCategory = this.state.apiCategory;
+        let { keywords, apiCategory } = this.state;
+        this.lastApiParameters = { keywords, apiCategory };
         return listingData;    
       })
   } 

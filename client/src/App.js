@@ -34,19 +34,14 @@ class App extends Component {
   }
 
   updateData = (passedSearchParameters, shouldRequestData) => {
-    let currentSearchParameters = Object.assign({}, this.state.searchParameters);
-    if (passedSearchParameters) {
-      for (let prop in passedSearchParameters) {
-        currentSearchParameters[prop] = passedSearchParameters[prop];
-      }
-    }
-
+    let currentSearchParameters = {...this.state.searchParameters, ...passedSearchParameters};
+    
     let { keywords, apiMode, apiCategory, page, timeStamp, ...myPricingData } = currentSearchParameters;
     if (shouldRequestData) {
       return api.get(apiMode, {
           keywords,
-          apiCategory: apiCategory,
-          page: page,
+          apiCategory,
+          page,
           timeStamp: timeStamp || new Date().toISOString()
         })
         .then(listingData => {
@@ -82,11 +77,7 @@ class App extends Component {
 
   onDone = (passedSearchParameters) => {
     this.setState(({searchParameters, totalPages, myOverallStats, listings}) => {
-      if (passedSearchParameters) {
-        for (let prop in passedSearchParameters) {
-          searchParameters[prop] = passedSearchParameters[prop];
-        }
-      }
+      Object.assign(searchParameters, passedSearchParameters)
 
       searchParameters.page = '1';
       searchParameters.timeStamp = new Date().toISOString();

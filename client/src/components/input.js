@@ -6,9 +6,16 @@ import './input.css';
 const Input = ({ type, name, text, unit, value, highlight, autoFocus, tabIndex }) => {
   let justify = '';
 
-  if (unit === '$') justify = 'justify-left'
-  else if (unit === '%') justify = 'justify-right'
-  else justify = 'justify-center';
+  switch (unit) {
+    case '$':
+      justify = 'justify-left'
+      break;
+    case '%':
+      justify = 'justify-right';
+      break;
+    default:
+      justify = 'justify-center';
+  }
 
   return (
     <div className = "input-field">

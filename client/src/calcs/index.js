@@ -30,7 +30,7 @@ export default {
   },
 
   myStatsForListing: (myOverallStats, listing) => {
-    myOverallStats = utils.objToFloat(Object.assign({},myOverallStats));
+    myOverallStats = utils.objToFloat(myOverallStats);
 
     let myListingStats = {};
     let listingTotalPrice = parseFloat(listing.price) + parseFloat(listing.shippingCost);
