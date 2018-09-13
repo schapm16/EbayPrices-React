@@ -3,8 +3,8 @@
   justify-content: center;
 }
 
-.input-switch button,
-.input-switch button:focus {
+.input-switch label,
+.input-switch label:focus {
   width: 40%;
   background: #FFF;
   color: #000;
@@ -15,13 +15,13 @@
   outline: none;
 }
 
-.input-switch button.active {
+.input-switch label.active {
   background: #000;
   color: #FFF;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+.input-switch input[type="radio"] {
+  width: 0;
+  height: 0;
+  margin: 0;
 }

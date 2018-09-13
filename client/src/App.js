@@ -109,7 +109,7 @@ class App extends Component {
 
   onAPIModeChange = ({ target }) => {
     if (this.state.listings.length === 0) return;
-    let apiMode = target.id;
+    let apiMode = target.value;
 
     this.setState(({ searchParameters, listings }) => {
       searchParameters.apiMode = apiMode;
@@ -135,7 +135,8 @@ class App extends Component {
             <TopBar myOverallStats={this.state.myOverallStats}/>
             <ListingsContainer listings={this.state.listings} onListingScrollEnd = {this.onListingScrollEnd}/>
             <BottomBar>
-              <InputSwitch 
+              <InputSwitch
+                name="apiMode" 
                 options={{
                   one: {
                     display: 'Sold Listings',
@@ -147,7 +148,7 @@ class App extends Component {
                   }
                 }}
                 switchState={this.state.searchParameters.apiMode} 
-                onClick={this.onAPIModeChange}
+                onChange={this.onAPIModeChange}
               />
             </BottomBar>
           </React.Fragment>

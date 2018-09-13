@@ -3,14 +3,18 @@ import React from 'react';
 import './inputSwitch.css';
 
 
-const InputSwitch = ({ options, switchState, onClick, fontSize='fs-md' }) => {
-  let btn1Class = (switchState === options.one.value) ? 'active' : '';
-  let btn2Class = (switchState === options.two.value) ? 'active' : '';
+const InputSwitch = ({ name, options, switchState, onChange, fontSize='fs-md' }) => {
+  let label1Class = (switchState === options.one.value) ? 'active' : '';
+  let label2Class = (switchState === options.two.value) ? 'active' : '';
 
   return (
-    <div className={`input-switch ${fontSize}`}>
-      <button type="button" id={options.one.value} className={btn1Class} onClick={onClick}>{options.one.display}</button>
-      <button type="button" id={options.two.value} className={btn2Class} onClick={onClick}>{options.two.display}</button>
+    <div className={`input-switch text-center ${fontSize}`}>
+      <label for={options.one.value} className={label1Class}>{options.one.display}
+        <input type="radio" id={options.one.value} name={name} value={options.one.value} onChange={onChange}/>
+      </label>
+      <label for={options.two.value} className={label2Class}>{options.two.display}
+        <input type="radio" id={options.two.value} name={name} value={options.two.value} onChange={onChange}/>
+      </label>
     </div>
   );
 }

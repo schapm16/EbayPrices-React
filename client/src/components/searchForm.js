@@ -16,11 +16,6 @@ class SearchForm extends Component {
     buyerShipping: '10.50'
   }
 
-  changeApiCategory = (event) => {
-    let apiCategory = (event.target.id === 'mens') ? 'mens' : 'womens';
-    this.setState({apiCategory}, () => this.updateData());
-  }
-
   transformInput = ({ name, value}) => {
     let match;
     switch (name) {
@@ -63,7 +58,7 @@ class SearchForm extends Component {
       this.inputTimer = setTimeout(() => {
       this.updateData()
         .then((listingData) => this.setSearchStatus(listingData));
-      }, 1000);
+      }, 500);
     });
   }
 
@@ -114,7 +109,8 @@ class SearchForm extends Component {
             />
           </div>
           <div className="input-group">
-            <InputSwitch 
+            <InputSwitch
+              name='apiCategory'
               options={{
                 one: { 
                   display: 'Men\'s', 
@@ -125,8 +121,8 @@ class SearchForm extends Component {
                   value: 'womens'
                 }
               }} 
-              switchState={this.state.apiCategory} 
-              onClick={this.changeApiCategory}
+              switchState={this.state.apiCategory}
+              onChange={this.onChange}
               fontSize='fs-xlg'
             />
           </div>
