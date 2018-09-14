@@ -6,15 +6,29 @@
 }
 
 .listing p {
-  margin: 10px 0;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+  
+.listing .panel2 {
+  margin-bottom: 10px;
+}
 
-.listing .panel1 {
+.listing .panel3 {
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+
+.listing .panel3 p {
+  margin: 10px 0;
+}
+
+.listing .panel4 p {
+  margin: 10px 0;
+}
+
+.listing .panel5 {
+  margin-top: 20px;
 }

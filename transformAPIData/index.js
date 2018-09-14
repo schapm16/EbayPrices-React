@@ -3,10 +3,16 @@ const moment = require('moment');
 const default_shippingCost = '10.50';
 
 function transformListings(listings) {
+  let today = moment();
   let transformedListings = listings.map((listing) => {
     let startTime = moment(listing.listingInfo[0].startTime[0]);
     let endTime = moment(listing.listingInfo[0].endTime[0]);
-    let durationTime = moment.duration(endTime.diff(startTime));
+    let durationTime;
+    if (endTime.isAfter(today)) { 
+      durationTime = moment.duration(today.diff(startTime));
+    } else {
+      durationTime = moment.duration(endTime.diff(startTime));
+    }
 
     let listingType = listing.listingInfo[0].listingType[0];
 
