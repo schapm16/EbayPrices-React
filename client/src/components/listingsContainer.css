@@ -2,7 +2,8 @@
   width: 100%;
   flex: 1 1; 
 
-  overflow: scroll;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 #listingsContainer::-webkit-scrollbar {
