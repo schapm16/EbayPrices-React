@@ -26,7 +26,7 @@ app.get('/active-listings', async (req, res) => {
 
 
 if (process.env.NODE_ENV === 'production') {
-  app.get('/', (req, res) => {
+  app.get('*', (req, res) => {
     app.use(express.static(path.join(__dirname, '/client/build/')));
     res.sendFile(path.join(__dirname, '/client/build/index.html'));
   })
