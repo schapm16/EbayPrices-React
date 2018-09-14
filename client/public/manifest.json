@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Ebay PriceChecker",
+  "name": "Ebay PriceChecker",
   "icons": [
     {
       "src": "favicon.ico",
