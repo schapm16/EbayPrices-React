@@ -134,6 +134,7 @@ class App extends Component {
           <React.Fragment>
             <TopBar myOverallStats={this.state.myOverallStats}/>
             <ListingsContainer listings={this.state.listings} onListingScrollEnd = {this.onListingScrollEnd}/>
+            {(this.state.listings.length) ? 
             <BottomBar>
               <InputSwitch
                 name="apiMode" 
@@ -151,6 +152,8 @@ class App extends Component {
                 onChange={this.onAPIModeChange}
               />
             </BottomBar>
+            : null
+            }
           </React.Fragment>
         )} />
 
