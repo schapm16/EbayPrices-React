@@ -6,7 +6,7 @@ import calc from './calcs';
 import api from './api';
 
 import { Route } from 'react-router-dom';
-import { SearchBar, TopBar, ListingsContainer, BottomBar, InputSwitch, SearchForm } from './components'; 
+import { SearchBar, TopBar, ListingsContainer, BottomBar, InputSwitch, SearchForm, Instructions } from './components'; 
 
 class App extends Component {
   onListingScrollEnd_APICall_Flag = true;
@@ -160,6 +160,8 @@ class App extends Component {
         <Route exact path="/search" render={() => (        
           <SearchForm lastApiParameters={this.lastApiParameters} updateData={this.updateData} onDone={this.onDone}/>
         )} />
+
+        <Route exact path="/" component={Instructions}/>
 
       </div>
     );

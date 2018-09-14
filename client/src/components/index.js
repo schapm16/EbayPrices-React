@@ -7,6 +7,7 @@ import SearchForm from './searchForm';
 import SearchStatus from './searchStatus';
 import Input from './input';
 import InputSwitch from './inputSwitch';
+import Instructions from './instructions';
 
 
 export {
@@ -18,5 +19,6 @@ export {
   SearchForm,
   SearchStatus,
   Input,
-  InputSwitch
+  InputSwitch,
+  Instructions
 }
