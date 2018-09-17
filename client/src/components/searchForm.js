@@ -61,11 +61,10 @@ class SearchForm extends Component {
 
   onChange = event => {
     const { name, value } = this.transformInput(event.target);
-    this.setState(({searchParameters, searchStatus}) => {
+    this.setState(({searchParameters}) => {
       searchParameters = {...searchParameters};
       searchParameters[name] = value;
-      searchStatus = 'searching'; 
-      return { searchParameters, searchStatus };
+      return { searchParameters };
     });
   }
 
@@ -101,9 +100,9 @@ class SearchForm extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    clearTimeout(this.inputTimer);
     if (!utils.areEqualObjects(this.state.searchParameters, prevState.searchParameters)) {
-      console.log('Are not equal');
+      clearTimeout(this.inputTimer);
+      this.setState({searchStatus: 'searching'}); 
       this.inputTimer = setTimeout(this.initiateSearch, 500);
     }
   }
