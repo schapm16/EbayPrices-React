@@ -1,5 +1,6 @@
 .instructions-container {
   padding: 40px;
+  overflow-y: scroll;
 }
 
 .instructions-container p,
@@ -8,3 +9,6 @@
   line-height: 1.5em;
 }
 
+.instructions-container::-webkit-scrollbar {
+  display: none;
+}

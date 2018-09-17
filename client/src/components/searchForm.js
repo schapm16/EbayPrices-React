@@ -2,18 +2,27 @@ import React, { Component } from 'react';
 
 import { Link, Redirect } from 'react-router-dom';
 import { Input, InputSwitch, SearchStatus } from './';
+import utils from '../utils';
 
 import './searchForm.css';
 
 class SearchForm extends Component {
-  lastApiParameters = this.props.lastApiParameters
-  inputTimer = '';
+
+  lastApiParameters = {}
+  inputTimer = ''
+  futureListingData = {}
 
   state = {
-    apiCategory: 'mens',
-    keywords: '',
-    sale: '20',
-    buyerShipping: '10.50'
+    searchParameters: {
+      page: '1',
+      apiCategory: this.props.lastApiParameters.apiCategory || 'mens',
+      keywords: '',
+      sale: '20',
+      buyerShipping: '10.50',
+      apiMode: this.props.lastApiParameters.apiMode || 'sold-listings'
+    },
+    viewResultsClicked: false,
+    searchStatus: '',
   }
 
   transformInput = ({ name, value}) => {
@@ -36,12 +45,13 @@ class SearchForm extends Component {
     }
   }
 
-  setSearchStatus = (listingData) => {
-    let { keywords, markedPrice, profit } = this.state
+  setSearchStatus = () => {
+    const { keywords, markedPrice, profit } = this.state.searchParameters
     let searchStatus = '';
 
     if (keywords.length < 4) searchStatus = 'keywords length';
-    else if (listingData && listingData.listings.length === 0) searchStatus = 'no results';
+    else if (this.props.apiCallInProgress) searchStatus ='searching';
+    else if (this.futureListingData.status === 'no results') searchStatus = 'no results';
     else if (!markedPrice) searchStatus = 'price null';
     else if (!profit) searchStatus = 'profit null';
     else searchStatus = 'done';
@@ -49,53 +59,73 @@ class SearchForm extends Component {
     this.setState({ searchStatus });
   }
 
-  onChange = (event) => {
-    clearTimeout(this.inputTimer);
-
-    let { name, value } = this.transformInput(event.target);
-
-    this.setState({[name]: value, searchStatus: 'searching'}, () => {
-      this.inputTimer = setTimeout(() => {
-      this.updateData()
-        .then((listingData) => this.setSearchStatus(listingData));
-      }, 500);
+  onChange = event => {
+    const { name, value } = this.transformInput(event.target);
+    this.setState(({searchParameters, searchStatus}) => {
+      searchParameters = {...searchParameters};
+      searchParameters[name] = value;
+      searchStatus = 'searching'; 
+      return { searchParameters, searchStatus };
     });
   }
 
-  shouldRequestData = () => {
-    return (this.state.keywords !== this.lastApiParameters.keywords) ||
-           (this.state.apiCategory !== this.lastApiParameters.apiCategory);
+  shouldMakeApiCall = () => {
+    const keywordsMinLength = this.state.searchParameters.keywords.length >= 4
+    
+    const areDiffKeywords = this.state.searchParameters.keywords !== this.lastApiParameters.keywords;
+    const isDiffCategory = this.state.searchParameters.apiCategory !== this.lastApiParameters.apiCategory;
+    const diffApiParameters = areDiffKeywords || isDiffCategory;
+
+    return keywordsMinLength && diffApiParameters;
   }
 
-  updateData = () => {
-    return this.props.updateData(this.state, this.shouldRequestData())
-      .then((listingData) => {
-        let { keywords, apiCategory } = this.state;
-        this.lastApiParameters = { keywords, apiCategory };
-        return listingData;    
-      })
-  } 
+  initiateSearch = () => {
+    if (this.shouldMakeApiCall()) {
+      const { keywords, apiCategory } = this.state.searchParameters;
+      this.lastApiParameters = { keywords, apiCategory };
 
-  onDone = () => {
-    this.props.onDone(this.state);
-    this.setState({doneClicked: true});  
-    
+      this.props.getApiData(this.state.searchParameters)
+        .then(apiData => {
+          this.futureListingData = apiData;
+          this.setSearchStatus();
+        })
+
+    } else {
+      this.setSearchStatus();
+    } 
+  }
+
+  onUserViewResults = () => {
+    this.props.onUserSearchDone(this.state.searchParameters, this.futureListingData);
+    this.setState({viewResultsClicked: true})
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    clearTimeout(this.inputTimer);
+    if (!utils.areEqualObjects(this.state.searchParameters, prevState.searchParameters)) {
+      console.log('Are not equal');
+      this.inputTimer = setTimeout(this.initiateSearch, 500);
+    }
+  }
+
+  componentDidMount() {
+    let { keywords, apiCategory, apiMode } = this.props.lastApiParameters;
+    this.lastApiParameters = { keywords, apiCategory, apiMode }
   }
 
   componentWillUnmount() {
     clearTimeout(this.inputTimer);
   }
 
-
   render() {
-    if (this.state.doneClicked) return <Redirect to='/listings'/>;
+    if (this.state.viewResultsClicked) return <Redirect to='/listings'/>;
     
     return (
       <div className="searchContainer">
         <div className="searchHeader">
           <Link to="/listings" className="material-icons back-icon">arrow_back_ios</Link>
           <SearchStatus status={this.state.searchStatus}/>
-          <button type="button" onClick={this.onDone} disabled={this.state.searchStatus !== 'done'}>Results</button>
+          <button type="button" onClick={this.onUserViewResults} disabled={this.state.searchStatus !== 'done'}>Results</button>
         </div>
 
         <form className="searchInputFields" onChange={this.onChange}>
@@ -103,7 +133,7 @@ class SearchForm extends Component {
             <Input 
               type="text" 
               name="keywords" text="Search" 
-              value={this.state.keywords} 
+              value={this.state.searchParameters.keywords} 
               autoFocus
               highlight={this.state.searchStatus === 'keywords length' || this.state.searchStatus === 'no results'}
             />
@@ -121,8 +151,7 @@ class SearchForm extends Component {
                   value: 'womens'
                 }
               }} 
-              switchState={this.state.apiCategory}
-              onChange={this.onChange}
+              switchState={this.state.searchParameters.apiCategory}
               fontSize='fs-xlg'
             />
           </div>
@@ -132,7 +161,7 @@ class SearchForm extends Component {
               name="markedPrice" 
               text="Store Price" 
               unit="$" 
-              value={this.state.markedPrice}
+              value={this.state.searchParameters.markedPrice}
               highlight={this.state.searchStatus === 'price null'}
             />
             <Input 
@@ -140,7 +169,7 @@ class SearchForm extends Component {
               name="profit" 
               text="Desired Profit" 
               unit="$" 
-              value={this.state.profit}
+              value={this.state.searchParameters.profit}
               highlight={this.state.searchStatus==='profit null'}
             />
             <Input 
@@ -148,14 +177,14 @@ class SearchForm extends Component {
               name="sale" 
               text="Store Sale" 
               unit="%" 
-              value={this.state.sale}
+              value={this.state.searchParameters.sale}
             />
             <Input 
               type="number" 
               name="buyerShipping" 
               text="Buyer Shipping Cost" 
               unit="$" 
-              value={this.state.buyerShipping}
+              value={this.state.searchParameters.buyerShipping}
             />
           </div>
         </form>
