@@ -7,8 +7,8 @@ import './searchBar.css';
 const SearchBar = () => {
   return(
     <div className="searchBar">
-      <Link to="/search" className="material-icons search-icon fs-xlg">search</Link>
-      <span className="fs-xlg fw-md">Ebay PriceChecker</span>
+      <Link to="/search" className="material-icons search-icon link fs-xlg">search</Link>
+      <Link to="/" className="link fs-xlg fw-md">Ebay PriceChecker</Link>
     </div>
 
   );

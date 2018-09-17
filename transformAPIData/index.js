@@ -60,7 +60,8 @@ module.exports = (ebayAPIData) => {
   let transformedData = {
     listings: [],
     pagination: {},
-    timestamp: ''
+    timestamp: '',
+    status: 'no results'
   }
   
   if (ebayAPIData.findCompletedItemsResponse){
@@ -73,12 +74,13 @@ module.exports = (ebayAPIData) => {
     return transformedData;
   }
   
-  if (accessedData.searchResult[0]['@count'] === '0') return transformedData;
+  if (accessedData.ack[0] === 'Failure' || accessedData.searchResult[0]['@count'] === '0') return transformedData;
 
 
   transformedData.listings = transformListings(accessedData.searchResult[0].item);
   transformedData.pagination = transformPagination(accessedData.paginationOutput[0]);
   transformedData.timestamp = accessedData.timestamp[0];
+  transformedData.status = 'success';
 
   return transformedData;
 }
