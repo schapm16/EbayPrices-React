@@ -1,19 +1,22 @@
-const request = require('request-promise-native');
+const axios = require('axios');
+const devDebug = require('./devDebug');
 
-if (process.env.NODE_ENV !== "production") {
-  const devUtils = require('./devUtils');
-  devUtils.logRequests(request);
+const ebayEndpoint = axios.create({
+  method: 'get',
+  url: 'http://svcs.ebay.com/services/search/FindingService/v1'
+})
+
+const defaultParams = {
+  'SECURITY-APPNAME': process.env.APPID,
+  'GLOBAL-ID': 'EBAY-US',
+  'RESPONSE-DATA-FORMAT': 'JSON',
+  'REST-PAYLOAD': true
 }
 
-
-const ebayEndpoint = request.defaults({
-  url: 'http://svcs.ebay.com/services/search/FindingService/v1',
-  headers: {
-    'X-EBAY-SOA-SECURITY-APPNAME': process.env.APPID,
-    'X-EBAY-SOA-GLOBAL-ID': 'EBAY-US',
-    'X-EBAY-SOA-RESPONSE-DATA-FORMAT': 'JSON',
-  }
-});
+if (process.env.NODE_ENV !== "production") {
+  devDebug.logAxiosRequest(ebayEndpoint);
+  devDebug.logAxiosResponse(ebayEndpoint);
+}
 
 function findCategoryId(gender) {
   if (gender.match(/womens/gi)) {
@@ -22,11 +25,10 @@ function findCategoryId(gender) {
   else if (gender.match(/mens/gi)) {
     return '15709'
   }
-  
 }
 
 function addItemFilters(options, filters) {
-  options.qs = Object.assign(options.qs, {
+  options = Object.assign(options, {
     'itemFilter(0).name': 'Condition',
     'itemFilter(0).value(0)': '1000',
     'itemFilter(0).value(1)': '1500',
@@ -37,31 +39,27 @@ function addItemFilters(options, filters) {
   if (!filters) return options;
 
   filters.forEach((filter, index) => {
-    options.qs[`itemFilter(${index+2}).name`] = filter.name;
-    options.qs[`itemFilter(${index+2}).value`] = filter.value;
-
+    options[`itemFilter(${index+2}).name`] = filter.name;
+    options[`itemFilter(${index+2}).value`] = filter.value;
   });
   
   return options;
 }
 
 function specifyPagination(options, page=1) {
-  options.qs['paginationInput.entriesPerPage'] = 15;
-  options.qs['paginationInput.pageNumber'] = page;
+  options['paginationInput.entriesPerPage'] = 15;
+  options['paginationInput.pageNumber'] = page;
   return options;
 }
 
 module.exports = {
   findCompletedItems: (req) => {
-    let options = {
-        method: 'GET',
-        qs: {
-          'operation-name': 'findCompletedItems',
-          'categoryId': findCategoryId(req.query.apiCategory),
-          'keywords': req.query.keywords,
-          'sortOrder': 'EndTimeSoonest'
-      }
-    };
+    let options = Object.assign({}, defaultParams, {
+      'operation-name': 'findCompletedItems',
+      'categoryId': findCategoryId(req.query.apiCategory),
+      'keywords': req.query.keywords,
+      'sortOrder': 'EndTimeSoonest'
+    });
 
     options = addItemFilters(options, [
       {
@@ -76,30 +74,24 @@ module.exports = {
 
     options = specifyPagination(options, req.query.page);
 
-    return ebayEndpoint(options)
-      .then((response) => JSON.parse(response))
+    return ebayEndpoint.request({params: options})
+      .then((response) => response.data)
       .catch((error) => console.log(error));
-
   },
 
   findItemsAdvanced: (req) => {
-    let options = {
-        method: 'GET',
-        qs: {
-          'operation-name': 'findItemsAdvanced',
-          'categoryId': findCategoryId(req.query.apiCategory),
-          'keywords': req.query.keywords,
-          'sortOrder': 'PricePlusShippingLowest'
-      }
-    }
+    let options = Object.assign({}, defaultParams, {
+      'operation-name': 'findItemsAdvanced',
+      'categoryId': findCategoryId(req.query.apiCategory),
+      'keywords': req.query.keywords,
+      'sortOrder': 'PricePlusShippingLowest'
+    });
 
     options = addItemFilters(options, [{name: 'StartTimeTo', value: req.query.timeStamp}]);
     options = specifyPagination(options, req.query.page);
 
-    return ebayEndpoint(options)
-      .then((response) => JSON.parse(response))
+    return ebayEndpoint.request({params: options})
+      .then((response) => response.data)
       .catch((error) => console.log(error))
-
   }
 }
-
