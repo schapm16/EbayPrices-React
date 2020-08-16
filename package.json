@@ -1,6 +1,6 @@
 {
   "name": "ebayprices-react",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Research prices on Ebay to determine if I can sell similar items for profit.",
   "main": "index.js",
   "scripts": {
@@ -11,15 +11,11 @@
   "author": "SJ",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
-    "moment": "^2.22.2",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.5"
+    "moment": "^2.22.2"
   },
-  "devDependencies": {
-    "request-debug": "^0.2.0",
-    "url-parse": "^1.4.3"
-  }
+  "devDependencies": {}
 }
