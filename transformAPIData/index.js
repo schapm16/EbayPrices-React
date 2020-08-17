@@ -64,13 +64,11 @@ module.exports = (ebayAPIData) => {
     status: 'no results'
   }
   
-  if (ebayAPIData.findCompletedItemsResponse){
+  if (ebayAPIData && ebayAPIData.findCompletedItemsResponse){
     accessedData = ebayAPIData.findCompletedItemsResponse[0];
-  } 
-  else if (ebayAPIData.findItemsAdvancedResponse) {
+  } else if (ebayAPIData && ebayAPIData.findItemsAdvancedResponse) {
     accessedData = ebayAPIData.findItemsAdvancedResponse[0];
-  }
-  else {
+  } else {
     return transformedData;
   }
   
