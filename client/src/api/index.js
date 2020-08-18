@@ -1,13 +1,15 @@
-import request from 'request-promise-native';
+import * as axios from 'axios';
 
-const configuredRequest = request.defaults({
-  baseUrl: `${window.location.origin}`,
-  json: true
+const configuredRequest = axios.create({
+  method: 'GET',
+  baseURL: `${window.location.origin}`
 })
 
 
 export default {
   get: (path, query) => {
-    return configuredRequest.get(path, {qs: query})
+    return configuredRequest
+            .get(path, {params: query})
+            .then(response => response.data)
   }
 }
