@@ -1,17 +1,21 @@
 const axios = require('axios');
+const axiosRetry = require('axios-retry');
 const devDebug = require('./devDebug');
 
 const ebayEndpoint = axios.create({
   method: 'get',
-  url: 'http://svcs.ebay.com/services/search/FindingService/v1'
+  url: 'http://svcs.ebay.com/services/search/FindingService/v1',
+  headers: {
+    'X-EBAY-SOA-GLOBAL-ID': 'EBAY-US',
+    'X-EBAY-SOA-RESPONSE-DATA-FORMAT': 'JSON',
+    'X-EBAY-SOA-SECURITY-APPNAME': process.env.APPID
+  }
 })
 
-const defaultParams = {
-  'SECURITY-APPNAME': process.env.APPID,
-  'GLOBAL-ID': 'EBAY-US',
-  'RESPONSE-DATA-FORMAT': 'JSON',
-  'REST-PAYLOAD': true
-}
+axiosRetry(ebayEndpoint, {
+  retries: 3,
+  retryDelay: axiosRetry.exponentialDelay
+});
 
 if (process.env.NODE_ENV !== "production") {
   devDebug.logAxiosRequest(ebayEndpoint);
@@ -54,12 +58,12 @@ function specifyPagination(options, page=1) {
 
 module.exports = {
   findCompletedItems: (req) => {
-    let options = Object.assign({}, defaultParams, {
+    let options = {
       'operation-name': 'findCompletedItems',
       'categoryId': findCategoryId(req.query.apiCategory),
       'keywords': req.query.keywords,
       'sortOrder': 'EndTimeSoonest'
-    });
+    };
 
     options = addItemFilters(options, [
       {
@@ -80,12 +84,12 @@ module.exports = {
   },
 
   findItemsAdvanced: (req) => {
-    let options = Object.assign({}, defaultParams, {
+    let options = {
       'operation-name': 'findItemsAdvanced',
       'categoryId': findCategoryId(req.query.apiCategory),
       'keywords': req.query.keywords,
       'sortOrder': 'PricePlusShippingLowest'
-    });
+    };
 
     options = addItemFilters(options, [{name: 'StartTimeTo', value: req.query.timeStamp}]);
     options = specifyPagination(options, req.query.page);
